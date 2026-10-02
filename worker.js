@@ -26,6 +26,7 @@ const SHOW_CONFIG = {
 
 const IMAGE_BASE = "https://lptwzgames.neocities.org/images/voting/";
 const DISCORD_URL = "https://discord.gg/85fwDny8J9";
+const DISCORD_LOGO = IMAGE_BASE + "bfahvslogo.png";
 
 const AUDIO = {
   music: "https://www.dropbox.com/scl/fi/vxeppt603dn8puyjp5ewz/bfahquietautumn.wav?rlkey=0phw0tch3x8h4lmiazi0xx46p&st=c1friwll&raw=1",
