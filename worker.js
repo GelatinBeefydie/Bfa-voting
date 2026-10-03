@@ -22,7 +22,8 @@ const SHOW_CONFIG = {
         "greenushanka",
         "dvd",
         "amiiboredslushcup",
-        "doubletophat"
+        "doubletophat",
+        "rtb"
       ]
     },
 
@@ -40,7 +41,8 @@ const SHOW_CONFIG = {
         "mousepants",
         "goldcoinckel",
         "scarfy",
-        "nutellajar"
+        "nutellajar",
+        "bfb"
       ]
     }
   }
@@ -214,7 +216,19 @@ const CHARACTERS = {
   nutellajar: {
     name: "Nutella Jar",
     image: "nutellajar.png"
-  }
+  },
+  {
+  id: "rtb",
+  name: "Red Tennis Ball",
+  team: "stupidity",
+  image: "rtb.png"
+},
+{
+  id: "bfb",
+  name: "Brazilian Furry Blocky",
+  team: "idnk",
+  image: "bfb.png"
+}
 };
 
 
