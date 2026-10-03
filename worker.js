@@ -1,272 +1,275 @@
-// ============================================================
-// BFAHVSC - Battle For a Hotel Voting System (and) Counter
-// Cloudflare Worker + Firebase Realtime Database
-// ============================================================
+const SHOW_CONFIG = {
+  showName: "Battle for a Hotel",
+  codename: "BFAHVSC",
 
-// =========================
-// CONFIGURATION / EDITOR
-// =========================
+  episode: 1,
+  episodeTitle: "Episode 1",
 
-const FIREBASE_DB_URL =
-  "https://bfah-8d469-default-rtdb.firebaseio.com";
+  losingTeamId: "idnk",
 
-const IMAGE_BASE =
-  "https://lptwzgames.neocities.org/images/voting/";
+  teams: {
+    idnk: {
+      name: 'Team "I Do Not Know😂✌️"',
+      image: "idnk.png",
 
-const EPISODE = 1;
+      members: [
+        "pinkfedora",
+        "brownfedora",
+        "firey2",
+        "maple",
+        "telephone",
+        "gamecontroller",
+        "greenushanka",
+        "dvd",
+        "amiiboredslushcup",
+        "doubletophat",
+        "bfb"
+      ]
+    },
 
-// Discord
-const discord_logo =
-  IMAGE_BASE + "bfahvslogo.png";
+    stupidity: {
+      name: "Stupidity",
+      image: "stupidity.png",
 
-const DISCORD_URL =
-  "https://discord.gg/85fwDny8J9";
-
-// ============================================================
-// TEAM EDITOR
-// ============================================================
-//
-// To change teams for a new episode, edit these arrays.
-//
-// IMPORTANT:
-// Characters placed here are already debuted.
-// They should NOT also be placed in
-// UNUSED_RECOMMENDED_CHARACTERS.
-//
-
-const TEAMS = {
-
-  stupidity: {
-    name: 'Team Stupidity',
-    image: IMAGE_BASE + 'stupidity.png',
-
-    members: [
-
-      {
-        id: "redslushcup",
-        name: "Red Slush Cup",
-        image: IMAGE_BASE + "redslushcup.png"
-      },
-
-      {
-        id: "pinkslushcup",
-        name: "Pink Slush Cup",
-        image: IMAGE_BASE + "pinkslushcup.png"
-      },
-
-      {
-        id: "mintslushcup",
-        name: "Mint Slush Cup",
-        image: IMAGE_BASE + "mintslushcup.png"
-      },
-
-      {
-        id: "pumpkinspicelatte",
-        name: "Pumpkin Spice Latte",
-        image: IMAGE_BASE + "pumpkinspicelatte.png"
-      },
-
-      {
-        id: "toothbrush",
-        name: "Toothbrush",
-        image: IMAGE_BASE + "toothbrush.png"
-      },
-
-      {
-        id: "crayon",
-        name: "Crayon",
-        image: IMAGE_BASE + "crayon.png"
-      },
-
-      {
-        id: "mousepants",
-        name: "Mouse Pants",
-        image: IMAGE_BASE + "mousepants.png"
-      },
-
-      {
-        id: "goldcoinckel",
-        name: "Gold Coinckel",
-        image: IMAGE_BASE + "goldcoinckel.png"
-      },
-
-      {
-        id: "scarfy",
-        name: "Scarfy",
-        image: IMAGE_BASE + "scarfy.png"
-      },
-
-      {
-        id: "nutellajar",
-        name: "Nutella Jar",
-        image: IMAGE_BASE + "nutellajar.png"
-      },
-
-      // NEW CHARACTER
-      {
-        id: "rtb",
-        name: "Red Tennis Ball",
-        image: IMAGE_BASE + "rtb.png"
-      }
-
-    ]
-  },
-
-  idnk: {
-    name: 'Team "I Do Not Know😂✌️"',
-    image: null,
-
-    members: [
-
-      {
-        id: "pinkfedora",
-        name: "Pink Fedora",
-        image: IMAGE_BASE + "pinkfedora.png"
-      },
-
-      {
-        id: "brownfedora",
-        name: "Brown Fedora",
-        image: IMAGE_BASE + "brownfedora.png"
-      },
-
-      {
-        id: "firey20",
-        name: "Firey 2.0",
-        image: IMAGE_BASE + "firey20.png"
-      },
-
-      {
-        id: "maple",
-        name: "Maple",
-        image: IMAGE_BASE + "maple.png"
-      },
-
-      {
-        id: "telephone",
-        name: "Telephone",
-        image: IMAGE_BASE + "telephone.png"
-      },
-
-      {
-        id: "gamecontroller",
-        name: "Game Controller",
-        image: IMAGE_BASE + "gamecontroller.png"
-      },
-
-      {
-        id: "greenushanka",
-        name: "Green Ushanka",
-        image: IMAGE_BASE + "greenushanka.png"
-      },
-
-      {
-        id: "dvd",
-        name: "DVD",
-        image: IMAGE_BASE + "dvd.png"
-      },
-
-      {
-        id: "amiiboredslushcup",
-        name: "Amiibo Red Slush Cup",
-        image: IMAGE_BASE + "amiiboredslushcup.png"
-      },
-
-      {
-        id: "doubletophat",
-        name: "Double Tophat",
-        image: IMAGE_BASE + "doubletophat.png"
-      },
-
-      // NEW CHARACTER
-      {
-        id: "bfb",
-        name: "Brazilian Furry Blocky",
-        image: IMAGE_BASE + "bfb.png"
-      }
-
-    ]
+      members: [
+        "redslushcup",
+        "pinkslushcup",
+        "mintslushcup",
+        "pumpkinspicelatte",
+        "toothbrush",
+        "crayon",
+        "mousepants",
+        "goldcoinckel",
+        "scarfy",
+        "nutellajar",
+        "rtb"
+      ]
+    }
   }
-
 };
 
 
 // ============================================================
-// UNUSED RECOMMENDED CHARACTERS
+// CONSTANTS
+// ============================================================
+
+const IMAGE_BASE =
+  "https://lptwzgames.neocities.org/images/voting/";
+
+const DISCORD_URL =
+  "https://discord.gg/85fwDny8J9";
+
+// Restored Discord logo constant
+const discord_logo =
+  IMAGE_BASE + "bfahvslogo.png";
+
+const DISCORD_LOGO =
+  discord_logo;
+
+
+// ============================================================
+// FONT
 // ============================================================
 //
-// ONLY characters that have NOT debuted belong here.
+// CHANGE THIS to the actual URL of your Shag Lounge font.
 //
-// Once a character debuts, REMOVE them from this list and
-// place them in one of the teams above.
+// Example:
 //
-// Existing Team Stupidity / IDNK members are NOT included.
+// const FONT_URL =
+//   "https://lptwzgames.neocities.org/fonts/ShagLounge.ttf";
+//
+// If you don't have the font uploaded yet, leave it empty.
+// The website will fall back to Arial.
 //
 
-const UNUSED_RECOMMENDED_CHARACTERS = [
-
-  // Example:
-  // {
-  //   id: "example",
-  //   name: "Example Character",
-  //   image: IMAGE_BASE + "example.png"
-  // }
-
-];
+const FONT_URL =
+  "https://lptwzgames.neocities.org/fonts/ShagLounge.ttf";
 
 
 // ============================================================
 // AUDIO
 // ============================================================
 
-const MUSIC_URL =
-  "https://www.dropbox.com/scl/fi/vxeppt603dn8puyjp5ewz/bfahquietautumn.wav?rlkey=0phw0tch3x8h4lmiazi0xx46p&st=c1friwll&dl=0";
+const AUDIO = {
 
-const HOVER_SOUND =
-  "https://www.dropbox.com/scl/fi/1xw02icxgy2fuq2jngn3c/pod_cursor_move.wav?rlkey=6wbpnj0e73hooss1qb2dkm1nk&st=3kcd686f&dl=0";
+  music:
+    "https://www.dropbox.com/scl/fi/vxeppt603dn8puyjp5ewz/bfahquietautumn.wav?rlkey=0phw0tch3x8h4lmiazi0xx46p&st=c1friwll&raw=1",
 
-const CLICK_SOUND =
-  "https://www.dropbox.com/scl/fi/hz8si2ox8ydh9pohpn4t3/pod_select.wav?rlkey=5ny0eqz6jo5uopouwmglmbsuf&st=6jlqi2cx&dl=0";
+  recommendFinish:
+    "https://www.dropbox.com/scl/fi/ydcvqygyrfeydlc80k1bc/pod_search_ping_01.wav?rlkey=z0n4ivn1uw618khmqh3jyudds&st=48othi0q&raw=1",
 
-const VOTE_FINISH_SOUND =
-  "https://www.dropbox.com/scl/fi/lulto3ccfy9hevqpsoez6/pod_appear_01.wav?rlkey=e2rtrtya4ve3tg3f2zsonbz7r&st=owe08b49&dl=0";
+  hover:
+    "https://www.dropbox.com/scl/fi/1xw02icxgy2fuq2jngn3c/pod_cursor_move.wav?rlkey=6wbpnj0e73hooss1qb2dkm1nk&st=3kcd686f&raw=1",
 
-const RECOMMEND_FINISH_SOUND =
-  "https://www.dropbox.com/scl/fi/ydcvqygyrfeydlc80k1bc/pod_search_ping_01.wav?rlkey=z0n4ivn1uw618khmqh3jyudds&st=48othi0q&dl=0";
+  click:
+    "https://www.dropbox.com/scl/fi/hz8si2ox8ydh9pohpn4t3/pod_select.wav?rlkey=5ny9eqz6jo5uopouwmglmbsuf&st=6jlqi2cx&raw=1",
 
-const FAVICON_URL =
-  "https://www.dropbox.com/scl/fi/38ehjsfppt07nbhgzjbn7/favicon.ico?rlkey=pafe0irs0zdvo529olanu7okn&st=sglifux9&dl=0";
+  voteFinish:
+    "https://www.dropbox.com/scl/fi/lulto3ccfy9hevqpsoez6/pod_appear_01.wav?rlkey=e2rtrtya4ve3tg3f2zsonbz7r&st=owe08b49&raw=1",
+
+  favicon:
+    "https://www.dropbox.com/scl/fi/38ehjsfppt07nbhgzjbn7/favicon.ico?rlkey=pafe0irs0zdvo529olanu7okn&st=sglifux9&raw=1"
+};
 
 
 // ============================================================
-// FIREBASE HELPERS
+// CHARACTERS
 // ============================================================
 
-async function firebaseGet(path) {
+const CHARACTERS = {
+
+  pinkfedora: {
+    name: "Pink Fedora",
+    image: "pinkfedora.png"
+  },
+
+  brownfedora: {
+    name: "Brown Fedora",
+    image: "brownfedora.png"
+  },
+
+  firey2: {
+    name: "Firey 2.0",
+    image: "firey2.png"
+  },
+
+  maple: {
+    name: "Maple",
+    image: "maple.png"
+  },
+
+  telephone: {
+    name: "Telephone",
+    image: "telephone.png"
+  },
+
+  gamecontroller: {
+    name: "Game Controller",
+    image: "gamecontroller.png"
+  },
+
+  greenushanka: {
+    name: "Green Ushanka",
+    image: "greenushanka.png"
+  },
+
+  dvd: {
+    name: "DVD",
+    image: "dvd.png"
+  },
+
+  amiiboredslushcup: {
+    name: "Amiibo Red Slush Cup",
+    image: "amiiboredslushcup.png"
+  },
+
+  doubletophat: {
+    name: "Double Tophat",
+    image: "doubletophat.png"
+  },
+
+  redslushcup: {
+    name: "Red Slush Cup",
+    image: "redslushcup.png"
+  },
+
+  pinkslushcup: {
+    name: "Pink Slush Cup",
+    image: "pinkslushcup.png"
+  },
+
+  mintslushcup: {
+    name: "Mint Slush Cup",
+    image: "mintslushcup.png"
+  },
+
+  pumpkinspicelatte: {
+    name: "Pumpkin Spice Latte",
+    image: "pumpkinspicelatte.png"
+  },
+
+  toothbrush: {
+    name: "Toothbrush",
+    image: "toothbrush.png"
+  },
+
+  crayon: {
+    name: "Crayon",
+    image: "crayon.png"
+  },
+
+  mousepants: {
+    name: "Mouse Pants",
+    image: "mousepants.png"
+  },
+
+  goldcoinckel: {
+    name: "Gold Coinckel",
+    image: "goldcoinckel.png"
+  },
+
+  scarfy: {
+    name: "Scarfy",
+    image: "scarfy.png"
+  },
+
+  nutellajar: {
+    name: "Nutella Jar",
+    image: "nutellajar.png"
+  },
+
+  rtb: {
+    name: "Red Tennis Ball",
+    image: "rtb.png"
+  },
+
+  bfb: {
+    name: "Brazilian Furry Blocky",
+    image: "bfb.png"
+  }
+};
+
+
+// ============================================================
+// FIREBASE
+// ============================================================
+
+function getDatabaseURL(env) {
+
+  return (
+    env.FIREBASE_DATABASE_URL ||
+    "https://bfah-8d469-default-rtdb.firebaseio.com"
+  ).replace(/\/+$/, "");
+
+}
+
+
+async function getFirebaseData(env, path) {
 
   const response = await fetch(
-    `${FIREBASE_DB_URL}/${path}.json`
+    `${getDatabaseURL(env)}/${path}.json`
   );
 
   if (!response.ok) {
     throw new Error(
-      `Firebase GET failed: ${response.status}`
+      `Firebase read failed: ${response.status}`
     );
   }
 
-  return await response.json();
+  return response.json();
+
 }
 
 
-async function firebasePost(path, data) {
+async function firebasePush(env, path, data) {
 
   const response = await fetch(
-    `${FIREBASE_DB_URL}/${path}.json`,
+    `${getDatabaseURL(env)}/${path}.json`,
     {
       method: "POST",
 
       headers: {
-        "Content-Type": "application/json"
+        "content-type": "application/json"
       },
 
       body: JSON.stringify(data)
@@ -275,94 +278,190 @@ async function firebasePost(path, data) {
 
   if (!response.ok) {
 
-    const errorText = await response.text();
+    const text =
+      await response.text();
 
     throw new Error(
-      `Firebase POST failed: ${response.status} ${errorText}`
+      `Firebase write failed: ${response.status} ${text}`
     );
+
   }
 
-  return await response.json();
+  return response.json();
+
 }
 
 
 // ============================================================
-// GET ALL CURRENT EPISODE VOTES
+// UTILITIES
 // ============================================================
 
-async function getVotes() {
+function escapeHTML(value) {
 
-  const data = await firebaseGet("votes");
+  return String(value ?? "").replace(
+    /[&<>"']/g,
 
-  if (!data || typeof data !== "object") {
-    return [];
-  }
-
-  return Object.values(data).filter(
-    vote => vote && vote.episode === EPISODE
+    char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[char])
   );
+
+}
+
+
+function normalizeName(value) {
+
+  return String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+
+}
+
+
+function objectValues(data) {
+
+  return data &&
+    typeof data === "object"
+      ? Object.values(data)
+      : [];
+
 }
 
 
 // ============================================================
-// GET RESULTS
+// DEBUT TRACKING
 // ============================================================
 
-async function getResults() {
+function getDebutedCharacterIds() {
 
-  const votes = await getVotes();
+  const ids = new Set();
 
-  const results = {};
+  for (
+    const team of Object.values(SHOW_CONFIG.teams)
+  ) {
 
-  for (const teamKey of Object.keys(TEAMS)) {
+    for (const id of team.members) {
 
-    results[teamKey] = {
-      name: TEAMS[teamKey].name,
-      total: 0,
-      contestants: {}
-    };
-
-    for (const contestant of TEAMS[teamKey].members) {
-
-      results[teamKey].contestants[contestant.id] = {
-        id: contestant.id,
-        name: contestant.name,
-        image: contestant.image,
-        votes: 0
-      };
+      ids.add(id);
 
     }
+
+  }
+
+  return ids;
+
+}
+
+
+function findCharacterIdByName(name) {
+
+  const normalized =
+    normalizeName(name);
+
+  for (
+    const [id, character]
+    of Object.entries(CHARACTERS)
+  ) {
+
+    if (
+      normalizeName(character.name)
+      === normalized
+    ) {
+
+      return id;
+
+    }
+
+  }
+
+  return null;
+
+}
+
+
+// ============================================================
+// TEAM HELPERS
+// ============================================================
+
+function getLosingTeam() {
+
+  return SHOW_CONFIG.teams[
+    SHOW_CONFIG.losingTeamId
+  ];
+
+}
+
+
+// ============================================================
+// VOTE RESULTS
+// ============================================================
+
+function buildResults(votes) {
+
+  const team =
+    getLosingTeam();
+
+  const allowed =
+    new Set(team.members);
+
+  const rows =
+    objectValues(votes)
+      .filter(
+        v =>
+          Number(v.episode)
+          === SHOW_CONFIG.episode
+      )
+      .filter(
+        v =>
+          v.teamId
+          === SHOW_CONFIG.losingTeamId
+      )
+      .filter(
+        v =>
+          allowed.has(v.characterId)
+      );
+
+
+  const counts = {};
+
+  for (const id of team.members) {
+
+    counts[id] = 0;
+
   }
 
 
-  for (const vote of votes) {
+  for (const vote of rows) {
 
-    if (!vote.contestantId) {
-      continue;
-    }
+    counts[vote.characterId] =
+      (counts[vote.characterId] || 0) + 1;
 
-    for (const teamKey of Object.keys(TEAMS)) {
-
-      const contestant =
-        TEAMS[teamKey].members.find(
-          member => member.id === vote.contestantId
-        );
-
-      if (!contestant) {
-        continue;
-      }
-
-      results[teamKey].contestants[
-        contestant.id
-      ].votes++;
-
-      results[teamKey].total++;
-
-      break;
-    }
   }
 
-  return results;
+
+  return {
+
+    total: rows.length,
+
+    counts,
+
+    recent:
+      rows
+        .sort(
+          (a, b) =>
+            Number(b.createdAt || 0)
+            -
+            Number(a.createdAt || 0)
+        )
+        .slice(0, 20)
+
+  };
+
 }
 
 
@@ -370,50 +469,323 @@ async function getResults() {
 // RECOMMENDATIONS
 // ============================================================
 
-async function getRecommendations() {
+function buildRecommendationResults(
+  recommendations
+) {
 
-  const data =
-    await firebaseGet("recommendations");
+  const debuted =
+    getDebutedCharacterIds();
 
-  if (!data || typeof data !== "object") {
-    return [];
+  const rows =
+    objectValues(recommendations)
+      .filter(
+        r =>
+          Number(r.episode)
+          === SHOW_CONFIG.episode
+      );
+
+
+  const unused = [];
+  const debutedRows = [];
+
+
+  for (const row of rows) {
+
+    const id =
+      findCharacterIdByName(
+        row.characterName
+      );
+
+
+    if (
+      id &&
+      debuted.has(id)
+    ) {
+
+      debutedRows.push(row);
+
+    } else {
+
+      unused.push(row);
+
+    }
+
   }
 
-  return Object.values(data);
-}
 
+  const sorter =
+    (a, b) =>
+      Number(b.createdAt || 0)
+      -
+      Number(a.createdAt || 0);
 
-// ============================================================
-// CORS
-// ============================================================
-
-function corsHeaders() {
 
   return {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods":
-      "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers":
-      "Content-Type"
+
+    total: rows.length,
+
+    unused:
+      unused.sort(sorter),
+
+    debuted:
+      debutedRows.sort(sorter)
+
   };
 
 }
 
 
 // ============================================================
-// JSON RESPONSE
+// VOTE HANDLER
 // ============================================================
 
-function jsonResponse(data, status = 200) {
+async function handleVote(
+  request,
+  env
+) {
+
+  const form =
+    await request.formData();
+
+
+  if (form.get("website")) {
+
+    throw new Error(
+      "Spam detected."
+    );
+
+  }
+
+
+  const characterId =
+    String(
+      form.get("characterId") || ""
+    ).trim();
+
+
+  const nickname =
+    String(
+      form.get("nickname") || ""
+    ).trim();
+
+
+  const reason =
+    String(
+      form.get("reason") || ""
+    ).trim();
+
+
+  const team =
+    getLosingTeam();
+
+
+  if (
+    !CHARACTERS[characterId] ||
+    !team.members.includes(characterId)
+  ) {
+
+    throw new Error(
+      "Please choose a character from the current losing team."
+    );
+
+  }
+
+
+  if (
+    !nickname ||
+    nickname.length > 30
+  ) {
+
+    throw new Error(
+      "Nickname is required and must be 30 characters or less."
+    );
+
+  }
+
+
+  if (
+    !reason ||
+    reason.length > 500
+  ) {
+
+    throw new Error(
+      "A reason is required and must be 500 characters or less."
+    );
+
+  }
+
+
+  await firebasePush(
+    env,
+    "votes",
+
+    {
+      episode:
+        SHOW_CONFIG.episode,
+
+      teamId:
+        SHOW_CONFIG.losingTeamId,
+
+      characterId,
+
+      characterName:
+        CHARACTERS[characterId].name,
+
+      nickname,
+
+      reason,
+
+      createdAt:
+        Date.now()
+    }
+  );
+
+
+  return json({
+
+    ok: true,
+
+    type: "vote",
+
+    message:
+      `Vote submitted for ${CHARACTERS[characterId].name}!`
+
+  });
+
+}
+
+
+// ============================================================
+// RECOMMENDATION HANDLER
+// ============================================================
+
+async function handleRecommendation(
+  request,
+  env
+) {
+
+  const form =
+    await request.formData();
+
+
+  if (form.get("website")) {
+
+    throw new Error(
+      "Spam detected."
+    );
+
+  }
+
+
+  const characterName =
+    String(
+      form.get("characterName") || ""
+    ).trim();
+
+
+  const nickname =
+    String(
+      form.get("nickname") || ""
+    ).trim();
+
+
+  const reason =
+    String(
+      form.get("reason") || ""
+    ).trim();
+
+
+  if (
+    !characterName ||
+    characterName.length > 60
+  ) {
+
+    throw new Error(
+      "Character name is required and must be 60 characters or less."
+    );
+
+  }
+
+
+  if (
+    !nickname ||
+    nickname.length > 30
+  ) {
+
+    throw new Error(
+      "Nickname is required and must be 30 characters or less."
+    );
+
+  }
+
+
+  if (
+    !reason ||
+    reason.length > 500
+  ) {
+
+    throw new Error(
+      "A reason is required and must be 500 characters or less."
+    );
+
+  }
+
+
+  await firebasePush(
+    env,
+    "recommendations",
+
+    {
+      episode:
+        SHOW_CONFIG.episode,
+
+      characterName,
+
+      nickname,
+
+      reason,
+
+      createdAt:
+        Date.now()
+    }
+  );
+
+
+  return json({
+
+    ok: true,
+
+    type: "recommendation",
+
+    message:
+      `${characterName} was recommended!`
+
+  });
+
+}
+
+
+// ============================================================
+// JSON
+// ============================================================
+
+function json(
+  data,
+  status = 200
+) {
 
   return new Response(
     JSON.stringify(data),
+
     {
       status,
 
       headers: {
-        "Content-Type": "application/json",
-        ...corsHeaders()
+        "content-type":
+          "application/json; charset=utf-8",
+
+        "cache-control":
+          "no-store"
       }
     }
   );
@@ -422,478 +794,426 @@ function jsonResponse(data, status = 200) {
 
 
 // ============================================================
-// MAIN WORKER
+// CHARACTER VOTING CARD
 // ============================================================
 
-export default {
+function renderCharacterCard(
+  id,
+  checked = false
+) {
 
-  async fetch(request, env) {
+  const c =
+    CHARACTERS[id];
 
-    const url =
-      new URL(request.url);
 
-    const pathname =
-      url.pathname;
+  return `
 
+    <label class="character-card">
 
-    // --------------------------------------------------------
-    // OPTIONS / CORS
-    // --------------------------------------------------------
+      <input
+        type="radio"
+        name="characterId"
+        value="${escapeHTML(id)}"
+        ${checked ? "checked" : ""}
+        required
+      >
 
-    if (request.method === "OPTIONS") {
+      <span class="character-card-inner">
 
-      return new Response(
-        null,
-        {
-          status: 204,
-          headers: corsHeaders()
-        }
-      );
+        <img
+          src="${IMAGE_BASE}${escapeHTML(c.image)}"
+          alt="${escapeHTML(c.name)}"
+        >
 
-    }
+        <span class="character-name">
+          ${escapeHTML(c.name)}
+        </span>
 
+      </span>
 
-    // --------------------------------------------------------
-    // VOTES API
-    // --------------------------------------------------------
+    </label>
 
-    if (
-      pathname === "/votes" &&
-      request.method === "GET"
-    ) {
+  `;
 
-      try {
+}
 
-        const results =
-          await getResults();
 
-        return jsonResponse({
-          success: true,
-          episode: EPISODE,
-          results
-        });
+// ============================================================
+// RESULTS HTML
+// ============================================================
 
-      } catch (error) {
+function renderResultsHTML(
+  results
+) {
 
-        return jsonResponse(
-          {
-            success: false,
-            error: error.message
-          },
-          500
-        );
+  const team =
+    getLosingTeam();
 
-      }
 
-    }
+  const max =
+    Math.max(
+      1,
 
-
-    // --------------------------------------------------------
-    // VOTE
-    // --------------------------------------------------------
-
-    if (
-      pathname === "/vote" &&
-      request.method === "POST"
-    ) {
-
-      try {
-
-        const body =
-          await request.json();
-
-
-        const nickname =
-          String(
-            body.nickname || "Anonymous"
-          ).trim().slice(0, 40);
-
-
-        const contestantId =
-          String(
-            body.contestantId || ""
-          ).trim();
-
-
-        const reason =
-          String(
-            body.reason || ""
-          ).trim().slice(0, 500);
-
-
-        if (!contestantId) {
-
-          return jsonResponse(
-            {
-              success: false,
-              error: "No contestant selected."
-            },
-            400
-          );
-
-        }
-
-
-        // Make sure contestant actually exists
-        // on a current team.
-
-        let contestantFound = null;
-        let teamFound = null;
-
-        for (
-          const teamKey of Object.keys(TEAMS)
-        ) {
-
-          const contestant =
-            TEAMS[teamKey].members.find(
-              member =>
-                member.id === contestantId
-            );
-
-          if (contestant) {
-
-            contestantFound =
-              contestant;
-
-            teamFound =
-              teamKey;
-
-            break;
-          }
-
-        }
-
-
-        if (!contestantFound) {
-
-          return jsonResponse(
-            {
-              success: false,
-              error: "Invalid contestant."
-            },
-            400
-          );
-
-        }
-
-
-        const vote = {
-
-          episode: EPISODE,
-
-          nickname,
-
-          reason,
-
-          contestantId,
-
-          contestantName:
-            contestantFound.name,
-
-          team:
-            teamFound,
-
-          timestamp:
-            new Date().toISOString()
-
-        };
-
-
-        await firebasePost(
-          "votes",
-          vote
-        );
-
-
-        return jsonResponse({
-          success: true,
-          message: "Vote submitted!"
-        });
-
-
-      } catch (error) {
-
-        return jsonResponse(
-          {
-            success: false,
-            error:
-              "Could not save vote: " +
-              error.message
-          },
-          500
-        );
-
-      }
-
-    }
-
-
-    // --------------------------------------------------------
-    // RECOMMENDATION LIST
-    // --------------------------------------------------------
-
-    if (
-      pathname === "/recommendations" &&
-      request.method === "GET"
-    ) {
-
-      try {
-
-        const recommendations =
-          await getRecommendations();
-
-        return jsonResponse({
-          success: true,
-          recommendations
-        });
-
-      } catch (error) {
-
-        return jsonResponse(
-          {
-            success: false,
-            error: error.message
-          },
-          500
-        );
-
-      }
-
-    }
-
-
-    // --------------------------------------------------------
-    // RECOMMEND A CHARACTER
-    // --------------------------------------------------------
-
-    if (
-      pathname === "/recommend" &&
-      request.method === "POST"
-    ) {
-
-      try {
-
-        const body =
-          await request.json();
-
-
-        const name =
-          String(
-            body.name || ""
-          ).trim().slice(0, 80);
-
-
-        const reason =
-          String(
-            body.reason || ""
-          ).trim().slice(0, 500);
-
-
-        const nickname =
-          String(
-            body.nickname || "Anonymous"
-          ).trim().slice(0, 40);
-
-
-        if (!name) {
-
-          return jsonResponse(
-            {
-              success: false,
-              error:
-                "Please enter a character name."
-            },
-            400
-          );
-
-        }
-
-
-        const recommendation = {
-
-          name,
-
-          reason,
-
-          nickname,
-
-          episode: EPISODE,
-
-          timestamp:
-            new Date().toISOString()
-
-        };
-
-
-        await firebasePost(
-          "recommendations",
-          recommendation
-        );
-
-
-        return jsonResponse({
-          success: true,
-          message:
-            "Character recommendation submitted!"
-        });
-
-
-      } catch (error) {
-
-        return jsonResponse(
-          {
-            success: false,
-            error:
-              "Could not save recommendation: " +
-              error.message
-          },
-          500
-        );
-
-      }
-
-    }
-
-
-    // --------------------------------------------------------
-    // CONFIG API
-    // --------------------------------------------------------
-
-    if (
-      pathname === "/config" &&
-      request.method === "GET"
-    ) {
-
-      return jsonResponse({
-
-        episode: EPISODE,
-
-        teams: TEAMS,
-
-        unusedRecommendedCharacters:
-          UNUSED_RECOMMENDED_CHARACTERS
-
-      });
-
-    }
-
-
-    // --------------------------------------------------------
-    // MAIN WEBSITE
-    // --------------------------------------------------------
-
-    if (
-      pathname === "/" ||
-      pathname === "/index.html"
-    ) {
-
-      return new Response(
-        HTML_PAGE,
-        {
-          headers: {
-            "Content-Type":
-              "text/html; charset=UTF-8"
-          }
-        }
-      );
-
-    }
-
-
-    // --------------------------------------------------------
-    // 404
-    // --------------------------------------------------------
-
-    return new Response(
-      "BFAHVSC - Page not found.",
-      {
-        status: 404,
-        headers: {
-          "Content-Type":
-            "text/plain; charset=UTF-8"
-        }
-      }
+      ...team.members.map(
+        id =>
+          results.counts[id] || 0
+      )
     );
+
+
+  return team.members.map(
+    id => {
+
+      const c =
+        CHARACTERS[id];
+
+      const count =
+        results.counts[id] || 0;
+
+      const width =
+        Math.round(
+          (count / max) * 100
+        );
+
+
+      return `
+
+        <div class="result-row">
+
+          <div class="result-head">
+
+            <span>
+              ${escapeHTML(c.name)}
+            </span>
+
+            <strong>
+              ${count}
+            </strong>
+
+          </div>
+
+          <div class="bar">
+
+            <i
+              style="width:${width}%"
+            ></i>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+  ).join("");
+
+}
+
+
+// ============================================================
+// RECENT VOTES
+// ============================================================
+
+function renderRecentVotes(
+  votes
+) {
+
+  if (!votes.length) {
+
+    return `
+      <p class="muted">
+        No votes have been submitted yet.
+      </p>
+    `;
 
   }
 
-};
+
+  return votes.map(
+    v => `
+
+      <div class="recent-item">
+
+        <b>
+          ${escapeHTML(v.nickname)}
+        </b>
+
+        voted for
+
+        <b>
+          ${escapeHTML(v.characterName)}
+        </b>
+
+        <div>
+          ${escapeHTML(v.reason)}
+        </div>
+
+      </div>
+
+    `
+  ).join("");
+
+}
 
 
 // ============================================================
-// WEBSITE HTML
+// RECOMMENDATION LIST
 // ============================================================
 
-const HTML_PAGE = `<!DOCTYPE html>
+function renderRecommendationList(
+  rows,
+  emptyText
+) {
+
+  if (!rows.length) {
+
+    return `
+      <p class="muted">
+        ${emptyText}
+      </p>
+    `;
+
+  }
+
+
+  return rows.map(
+    r => `
+
+      <div class="recommendation-item">
+
+        <div class="recommendation-title">
+          ${escapeHTML(r.characterName)}
+        </div>
+
+        <div>
+          Recommended by
+          <b>
+            ${escapeHTML(r.nickname)}
+          </b>
+        </div>
+
+        <div>
+          ${escapeHTML(r.reason)}
+        </div>
+
+      </div>
+
+    `
+  ).join("");
+
+}
+
+
+// ============================================================
+// TEAMS
+// ============================================================
+//
+// IMPORTANT:
+// This loops through EVERY team.
+//
+// Therefore contestant icons are shown even if that
+// team is NOT currently up for elimination.
+//
+
+function renderTeams() {
+
+  return Object.entries(
+    SHOW_CONFIG.teams
+  ).map(
+    ([id, team]) => `
+
+      <article class="team-card">
+
+        <div class="team-heading">
+
+          <img
+            class="team-image"
+            src="${IMAGE_BASE}${escapeHTML(team.image)}"
+            alt="${escapeHTML(team.name)}"
+          >
+
+          <div>
+
+            <h3>
+              ${escapeHTML(team.name)}
+            </h3>
+
+            <p>
+              ${team.members.length}
+              contestant${team.members.length === 1 ? "" : "s"}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="team-contestants">
+
+          ${team.members.map(
+            memberId => {
+
+              const character =
+                CHARACTERS[memberId];
+
+
+              if (!character) {
+
+                return "";
+
+              }
+
+
+              return `
+
+                <div
+                  class="contestant-icon"
+                  title="${escapeHTML(character.name)}"
+                >
+
+                  <img
+                    src="${IMAGE_BASE}${escapeHTML(character.image)}"
+                    alt="${escapeHTML(character.name)}"
+                  >
+
+                  <span>
+                    ${escapeHTML(character.name)}
+                  </span>
+
+                </div>
+
+              `;
+
+            }
+          ).join("")}
+
+        </div>
+
+      </article>
+
+    `
+  ).join("");
+
+}
+
+
+// ============================================================
+// MAIN PAGE
+// ============================================================
+
+function renderVotingPage(
+  results,
+  recommendations
+) {
+
+  const team =
+    getLosingTeam();
+
+
+  return `<!doctype html>
 
 <html lang="en">
 
 <head>
 
-<meta charset="UTF-8">
+<meta charset="utf-8">
 
 <meta
   name="viewport"
-  content="width=device-width, initial-scale=1.0"
+  content="width=device-width,initial-scale=1"
 >
 
 <title>
-Battle for a Hotel - Voting
+  ${escapeHTML(SHOW_CONFIG.showName)}
+  — BFAHVSC
 </title>
+
 
 <link
   rel="icon"
-  href="${FAVICON_URL}"
+  href="${AUDIO.favicon}"
 >
 
+
 <style>
+
+/* ==========================================================
+   SHAG LOUNGE FONT
+   ========================================================== */
+
+@font-face {
+
+  font-family: "Shag Lounge";
+
+  src:
+    url("${FONT_URL}")
+    format("truetype");
+
+  font-weight: normal;
+
+  font-style: normal;
+
+  font-display: swap;
+
+}
+
+
+/* ==========================================================
+   GENERAL
+   ========================================================== */
 
 * {
   box-sizing: border-box;
 }
 
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
+html {
+  scroll-behavior: smooth;
 }
 
 
 body {
 
+  margin: 0;
+
   font-family:
-    "Trebuchet MS",
+    "Shag Lounge",
     Arial,
+    Helvetica,
     sans-serif;
 
   color: white;
 
   min-height: 100vh;
 
-  overflow-x: hidden;
-
   background:
 
     radial-gradient(
-      circle at 20% 20%,
-      rgba(98, 65, 180, 0.35),
-      transparent 30%
+      circle at 12% 18%,
+      rgba(90,50,255,.42),
+      transparent 28%
     ),
 
     radial-gradient(
-      circle at 80% 70%,
-      rgba(0, 160, 255, 0.20),
+      circle at 88% 20%,
+      rgba(255,45,210,.28),
+      transparent 27%
+    ),
+
+    radial-gradient(
+      circle at 52% 88%,
+      rgba(0,150,255,.30),
       transparent 35%
     ),
 
     linear-gradient(
       135deg,
-      #080014,
-      #12002c 40%,
-      #020b25 100%
+      #01010a 0%,
+      #080021 45%,
+      #020817 100%
     );
+
+  overflow-x: hidden;
 
 }
 
@@ -902,10 +1222,9 @@ body {
    STAR FIELD
    ========================================================== */
 
-body::before,
-body::after {
-
-  content: "";
+.starfield,
+.starfield::before,
+.starfield::after {
 
   position: fixed;
 
@@ -913,125 +1232,244 @@ body::after {
 
   pointer-events: none;
 
-  z-index: -1;
+  content: "";
+
+  z-index: 0;
 
 }
 
 
-body::before {
+.starfield {
 
-  opacity: 0.9;
+  opacity: .9;
 
   background-image:
 
     radial-gradient(
-      2px 2px at 10% 20%,
-      white,
+      1px 1px at 4% 8%,
+      #fff,
       transparent
     ),
 
     radial-gradient(
-      1px 1px at 25% 70%,
-      white,
+      2px 2px at 12% 72%,
+      #fff,
       transparent
     ),
 
     radial-gradient(
-      2px 2px at 40% 40%,
-      white,
+      1px 1px at 19% 34%,
+      #fff,
       transparent
     ),
 
     radial-gradient(
-      1px 1px at 55% 15%,
-      white,
+      1px 1px at 27% 91%,
+      #fff,
       transparent
     ),
 
     radial-gradient(
-      2px 2px at 70% 60%,
-      white,
+      2px 2px at 35% 16%,
+      #fff,
       transparent
     ),
 
     radial-gradient(
-      1px 1px at 85% 25%,
-      white,
+      1px 1px at 43% 61%,
+      #fff,
       transparent
     ),
 
     radial-gradient(
-      2px 2px at 95% 85%,
-      white,
+      1px 1px at 51% 29%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      2px 2px at 58% 83%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 66% 45%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      2px 2px at 73% 9%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 81% 70%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 89% 38%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      2px 2px at 96% 88%,
+      #fff,
       transparent
     );
 
-  background-size:
-    260px 260px,
-    180px 180px,
-    330px 330px,
-    220px 220px,
-    300px 300px,
-    190px 190px,
-    270px 270px;
+  background-size: 180px 180px;
+
+  animation:
+    drift 38s linear infinite;
 
 }
 
 
-body::after {
+.starfield::before {
 
-  opacity: 0.55;
+  opacity: .6;
 
   background-image:
 
     radial-gradient(
-      1px 1px at 15% 80%,
-      white,
+      1px 1px at 8% 45%,
+      #fff,
       transparent
     ),
 
     radial-gradient(
-      2px 2px at 35% 10%,
-      white,
+      2px 2px at 22% 12%,
+      #fff,
       transparent
     ),
 
     radial-gradient(
-      1px 1px at 50% 90%,
-      white,
+      1px 1px at 31% 65%,
+      #fff,
       transparent
     ),
 
     radial-gradient(
-      1px 1px at 75% 35%,
-      white,
+      1px 1px at 48% 94%,
+      #fff,
       transparent
     ),
 
     radial-gradient(
-      2px 2px at 90% 55%,
-      white,
+      2px 2px at 63% 23%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 77% 56%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 94% 18%,
+      #fff,
       transparent
     );
 
-  background-size:
-    200px 200px,
-    320px 320px,
-    240px 240px,
-    180px 180px,
-    300px 300px;
+  background-size: 260px 260px;
+
+  animation:
+    drift2 55s linear infinite;
 
 }
 
 
-.container {
+.starfield::after {
 
-  width: min(1200px, 94%);
+  opacity: .35;
 
-  margin: auto;
+  background-image:
 
-  padding:
-    30px 0 100px;
+    radial-gradient(
+      2px 2px at 14% 26%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 39% 48%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      2px 2px at 69% 76%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 86% 62%,
+      #fff,
+      transparent
+    );
+
+  background-size: 340px 340px;
+
+  animation:
+    twinkle 4s ease-in-out infinite alternate;
+
+}
+
+
+@keyframes drift {
+
+  to {
+    transform:
+      translateY(180px);
+  }
+
+}
+
+
+@keyframes drift2 {
+
+  to {
+    transform:
+      translateY(-260px);
+  }
+
+}
+
+
+@keyframes twinkle {
+
+  from {
+    opacity: .18;
+  }
+
+  to {
+    opacity: .55;
+  }
+
+}
+
+
+/* ==========================================================
+   CONTENT LAYER
+   ========================================================== */
+
+header,
+main,
+.music-button,
+.discord-button {
+
+  position: relative;
+
+  z-index: 1;
 
 }
 
@@ -1044,7 +1482,17 @@ header {
 
   text-align: center;
 
-  margin-bottom: 30px;
+  padding:
+    48px
+    18px
+    30px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(7,3,30,.78),
+      rgba(7,3,30,.05)
+    );
 
 }
 
@@ -1053,24 +1501,47 @@ header h1 {
 
   margin: 0;
 
-  font-size: clamp(
-    35px,
-    7vw,
-    72px
-  );
+  font-size:
+    clamp(
+      2rem,
+      7vw,
+      4rem
+    );
 
   text-shadow:
-    0 0 10px #8e5cff,
-    0 0 25px #5e31ff;
+    0 0 22px #8b5cff;
 
 }
 
 
 header p {
 
-  font-size: 18px;
+  margin:
+    10px 0;
 
-  opacity: 0.9;
+  color:
+    #cfd5ff;
+
+}
+
+
+/* ==========================================================
+   MAIN
+   ========================================================== */
+
+main {
+
+  width:
+    min(
+      1050px,
+      calc(100% - 24px)
+    );
+
+  margin:
+    auto;
+
+  padding-bottom:
+    100px;
 
 }
 
@@ -1084,171 +1555,379 @@ header p {
   background:
     linear-gradient(
       145deg,
-      rgba(30, 15, 65, 0.92),
-      rgba(5, 20, 50, 0.88)
+      rgba(24,14,65,.92),
+      rgba(7,10,34,.94)
     );
 
   border:
     2px solid
-    rgba(155, 115, 255, 0.55);
+    rgba(255,255,255,.72);
 
-  border-radius: 22px;
+  border-radius:
+    18px;
 
-  padding: 24px;
+  padding:
+    24px;
 
-  margin-bottom: 28px;
+  margin-bottom:
+    26px;
 
   box-shadow:
-    0 0 30px rgba(70, 30, 180, 0.28);
+
+    0 0 28px
+    rgba(100,70,255,.28),
+
+    7px 7px 0
+    rgba(0,0,0,.7);
 
   backdrop-filter:
-    blur(10px);
+    blur(9px);
 
 }
 
 
-.panel h2 {
+h2 {
 
-  margin-top: 0;
+  margin-top:
+    0;
 
-  text-align: center;
+}
+
+
+h3 {
+
+  margin:
+    4px 0 8px;
+
+}
+
+
+.muted {
+
+  color:
+    #aeb6dd;
 
 }
 
 
 /* ==========================================================
-   TEAM
+   TEAMS
    ========================================================== */
 
-.team {
-
-  margin-bottom: 35px;
-
-}
-
-
-.team-title {
-
-  text-align: center;
-
-  font-size: 30px;
-
-  margin-bottom: 20px;
-
-}
-
-
-.team-members {
+.team-grid {
 
   display: grid;
 
   grid-template-columns:
     repeat(
       auto-fit,
-      minmax(130px, 1fr)
+      minmax(300px, 1fr)
     );
 
-  gap: 15px;
+  gap:
+    18px;
 
 }
 
 
-.contestant {
+.team-card {
 
-  position: relative;
+  padding:
+    15px;
 
-  cursor: pointer;
-
-  padding: 10px;
-
-  border-radius: 17px;
+  border-radius:
+    14px;
 
   background:
-    linear-gradient(
-      145deg,
-      rgba(255,255,255,0.12),
-      rgba(255,255,255,0.04)
+    rgba(255,255,255,.06);
+
+  border:
+    1px solid
+    rgba(255,255,255,.15);
+
+}
+
+
+.team-heading {
+
+  display:
+    flex;
+
+  gap:
+    16px;
+
+  align-items:
+    center;
+
+  margin-bottom:
+    15px;
+
+}
+
+
+.team-image {
+
+  width:
+    120px;
+
+  height:
+    90px;
+
+  object-fit:
+    contain;
+
+}
+
+
+.team-card p {
+
+  color:
+    #cbd0ee;
+
+  line-height:
+    1.45;
+
+}
+
+
+/* ==========================================================
+   ALL CONTESTANT ICONS
+   ========================================================== */
+
+.team-contestants {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(82px, 1fr)
     );
+
+  gap:
+    10px;
+
+  border-top:
+    1px solid
+    rgba(255,255,255,.12);
+
+  padding-top:
+    14px;
+
+}
+
+
+.contestant-icon {
+
+  text-align:
+    center;
+
+  padding:
+    7px 4px;
+
+  border-radius:
+    10px;
+
+  background:
+    rgba(0,0,0,.2);
+
+  border:
+    1px solid
+    rgba(255,255,255,.08);
+
+  transition:
+    transform .15s ease,
+    background .15s ease,
+    border-color .15s ease;
+
+}
+
+
+.contestant-icon:hover {
+
+  transform:
+    translateY(-3px);
+
+  background:
+    rgba(120,80,255,.18);
+
+  border-color:
+    rgba(170,140,255,.6);
+
+}
+
+
+.contestant-icon img {
+
+  display:
+    block;
+
+  width:
+    64px;
+
+  height:
+    64px;
+
+  margin:
+    0 auto 5px;
+
+  object-fit:
+    contain;
+
+}
+
+
+.contestant-icon span {
+
+  display:
+    block;
+
+  font-size:
+    .72rem;
+
+  line-height:
+    1.1;
+
+  word-break:
+    break-word;
+
+  color:
+    #e3e6ff;
+
+}
+
+
+/* ==========================================================
+   VOTING CHARACTERS
+   ========================================================== */
+
+.character-grid {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(150px, 1fr)
+    );
+
+  gap:
+    12px;
+
+}
+
+
+.character-card {
+
+  cursor:
+    pointer;
+
+}
+
+
+.character-card input {
+
+  position:
+    absolute;
+
+  opacity:
+    0;
+
+}
+
+
+.character-card-inner {
+
+  min-height:
+    165px;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  text-align:
+    center;
+
+  padding:
+    12px;
 
   border:
     2px solid
-    rgba(255,255,255,0.15);
+    rgba(255,255,255,.15);
+
+  border-radius:
+    14px;
+
+  background:
+    rgba(255,255,255,.055);
 
   transition:
-    transform 0.15s,
-    border-color 0.15s,
-    box-shadow 0.15s;
+    .15s;
 
 }
 
 
-.contestant:hover {
+.character-card-inner:hover {
 
   transform:
-    translateY(-5px)
-    scale(1.03);
+    translateY(-3px);
 
   border-color:
-    rgba(180,140,255,0.9);
+    #a88cff;
+
+  background:
+    rgba(130,90,255,.18);
+
+}
+
+
+.character-card input:checked
++ .character-card-inner {
+
+  border-color:
+    #8effc4;
+
+  background:
+    rgba(45,210,130,.18);
 
   box-shadow:
     0 0 18px
-    rgba(130,90,255,0.45);
+    rgba(90,255,180,.2);
 
 }
 
 
-.contestant.selected {
+.character-card img {
 
-  border-color:
-    #ffffff;
+  width:
+    105px;
 
-  box-shadow:
-    0 0 0 3px
-    rgba(150,100,255,0.8),
-    0 0 25px
-    rgba(130,90,255,0.8);
+  height:
+    105px;
 
-}
-
-
-.contestant img {
-
-  display: block;
-
-  width: 100%;
-
-  aspect-ratio: 1;
-
-  object-fit: contain;
-
-  border-radius: 12px;
+  object-fit:
+    contain;
 
 }
 
 
-.contestant-name {
+.character-name {
 
-  text-align: center;
+  font-weight:
+    bold;
 
-  font-weight: bold;
-
-  margin-top: 8px;
-
-  font-size: 14px;
-
-}
-
-
-.vote-count {
-
-  text-align: center;
-
-  margin-top: 5px;
-
-  opacity: 0.8;
-
-  font-size: 13px;
+  margin-top:
+    6px;
 
 }
 
@@ -1257,127 +1936,153 @@ header p {
    FORMS
    ========================================================== */
 
-label {
+label.field {
 
-  display: block;
-
-  font-weight: bold;
+  display:
+    block;
 
   margin:
-    14px 0 6px;
+    14px 0;
 
 }
 
 
-input,
+.field span {
+
+  display:
+    block;
+
+  margin-bottom:
+    6px;
+
+  font-weight:
+    bold;
+
+}
+
+
+input[type=text],
 textarea {
 
-  width: 100%;
+  width:
+    100%;
 
-  border: 2px solid
-    rgba(180,150,255,0.4);
+  border:
+    2px solid
+    rgba(255,255,255,.18);
 
-  border-radius: 12px;
+  border-radius:
+    10px;
 
-  padding: 13px;
+  padding:
+    11px;
 
   background:
-    rgba(0,0,0,0.35);
+    rgba(0,0,0,.3);
 
-  color: white;
+  color:
+    white;
 
-  outline: none;
+  font:
+    inherit;
 
-  font: inherit;
+  outline:
+    none;
 
 }
 
 
-input:focus,
+input[type=text]:focus,
 textarea:focus {
 
   border-color:
-    #a982ff;
-
-  box-shadow:
-    0 0 12px
-    rgba(130,90,255,0.35);
+    #9d7cff;
 
 }
 
 
 textarea {
 
-  min-height: 110px;
+  min-height:
+    110px;
 
-  resize: vertical;
+  resize:
+    vertical;
 
 }
 
 
-button {
+/* ==========================================================
+   BUTTONS
+   ========================================================== */
 
-  border: none;
+button,
+.music-button {
 
-  border-radius: 13px;
+  border:
+    0;
+
+  border-radius:
+    10px;
 
   padding:
-    13px 22px;
+    12px 18px;
 
-  margin-top: 16px;
+  font-weight:
+    bold;
 
-  font-weight: bold;
-
-  font-size: 16px;
-
-  color: white;
-
-  cursor: pointer;
+  cursor:
+    pointer;
 
   background:
     linear-gradient(
       135deg,
-      #7544ff,
-      #b23dff
+      #7c5cff,
+      #c34cff
     );
 
-  box-shadow:
-    0 5px 15px
-    rgba(100,40,200,0.35);
+  color:
+    #fff;
 
-  transition:
-    transform 0.12s,
-    filter 0.12s;
+  box-shadow:
+    0 5px 0
+    rgba(0,0,0,.35);
 
 }
 
 
-button:hover {
-
-  transform:
-    translateY(-2px);
+button:hover,
+.music-button:hover {
 
   filter:
     brightness(1.15);
 
+  transform:
+    translateY(-1px);
+
 }
 
 
-button:active {
+button:active,
+.music-button:active {
 
   transform:
-    translateY(1px);
+    translateY(2px);
+
+  box-shadow:
+    0 2px 0
+    rgba(0,0,0,.35);
 
 }
 
 
 button:disabled {
 
-  opacity: 0.5;
+  opacity:
+    .6;
 
-  cursor: not-allowed;
-
-  transform: none;
+  cursor:
+    wait;
 
 }
 
@@ -1386,273 +2091,377 @@ button:disabled {
    RESULTS
    ========================================================== */
 
-.results-grid {
+.results-total {
 
-  display: grid;
+  font-size:
+    1.1rem;
 
-  grid-template-columns:
-    repeat(
-      auto-fit,
-      minmax(220px, 1fr)
-    );
-
-  gap: 20px;
+  margin-bottom:
+    18px;
 
 }
 
 
-.result-card {
+.result-row {
 
-  padding: 18px;
+  margin:
+    13px 0;
 
-  border-radius: 16px;
+}
+
+
+.result-head {
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  margin-bottom:
+    5px;
+
+}
+
+
+.bar {
+
+  height:
+    15px;
+
+  border-radius:
+    99px;
 
   background:
-    rgba(0,0,0,0.25);
+    rgba(255,255,255,.1);
 
-  border:
-    1px solid
-    rgba(255,255,255,0.12);
-
-}
-
-
-.result-name {
-
-  font-weight: bold;
+  overflow:
+    hidden;
 
 }
 
 
-.result-bar {
+.bar i {
 
-  height: 12px;
+  display:
+    block;
 
-  border-radius: 20px;
+  height:
+    100%;
 
-  overflow: hidden;
-
-  background:
-    rgba(255,255,255,0.12);
-
-  margin-top: 8px;
-
-}
-
-
-.result-fill {
-
-  height: 100%;
-
-  width: 0%;
+  border-radius:
+    99px;
 
   background:
     linear-gradient(
       90deg,
-      #7544ff,
-      #dd61ff
+      #6e4dff,
+      #ff5bcf
     );
-
-  transition:
-    width 0.4s ease;
 
 }
 
 
 /* ==========================================================
-   RECOMMENDATIONS
+   RECENT / RECOMMENDATIONS
    ========================================================== */
 
-.recommended-grid {
+.recent-item,
+.recommendation-item {
 
-  display: grid;
-
-  grid-template-columns:
-    repeat(
-      auto-fit,
-      minmax(150px, 1fr)
-    );
-
-  gap: 15px;
-
-}
-
-
-.recommended-card {
-
-  padding: 14px;
-
-  border-radius: 15px;
-
-  background:
-    rgba(255,255,255,0.07);
-
-  text-align: center;
-
-}
-
-
-.recommended-card img {
-
-  width: 100%;
-
-  aspect-ratio: 1;
-
-  object-fit: contain;
-
-}
-
-
-/* ==========================================================
-   NOTIFICATION
-   ========================================================== */
-
-#notification {
-
-  position: fixed;
-
-  top: 20px;
-
-  left: 20px;
-
-  z-index: 10000;
+  margin:
+    10px 0;
 
   padding:
-    13px 18px;
+    12px;
 
-  border-radius: 12px;
+  border-left:
+    4px solid
+    #8b6cff;
 
   background:
-    rgba(18,8,40,0.96);
+    rgba(255,255,255,.055);
 
-  border:
-    2px solid
-    rgba(180,130,255,0.7);
-
-  box-shadow:
-    0 0 20px
-    rgba(130,80,255,0.45);
-
-  transform:
-    translateX(-130%);
-
-  opacity: 0;
-
-  transition:
-    transform 0.25s,
-    opacity 0.25s;
+  border-radius:
+    8px;
 
 }
 
 
-#notification.show {
+.recent-item div,
+.recommendation-item div {
 
-  transform:
-    translateX(0);
+  margin-top:
+    5px;
 
-  opacity: 1;
+  color:
+    #cbd0ee;
+
+}
+
+
+.recommendation-title {
+
+  font-size:
+    1.15rem;
+
+  font-weight:
+    bold;
+
+  color:
+    #fff;
+
+}
+
+
+.split {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:
+    18px;
 
 }
 
 
 /* ==========================================================
-   DISCORD BUTTON
+   FIXED BUTTONS
    ========================================================== */
+
+.music-button {
+
+  position:
+    fixed;
+
+  bottom:
+    18px;
+
+  left:
+    18px;
+
+  z-index:
+    20;
+
+}
+
 
 .discord-button {
 
-  position: fixed;
+  position:
+    fixed;
 
-  right: 20px;
+  bottom:
+    18px;
 
-  bottom: 20px;
+  right:
+    18px;
 
-  width: 72px;
+  z-index:
+    20;
 
-  height: 72px;
+  width:
+    58px;
 
-  z-index: 9999;
+  height:
+    58px;
 
-  border-radius: 50%;
+  border-radius:
+    50%;
 
-  overflow: hidden;
+  padding:
+    5px;
 
   background:
-    rgba(20,10,45,0.9);
-
-  border:
-    3px solid
-    rgba(255,255,255,0.7);
+    #5865f2;
 
   box-shadow:
     0 0 20px
-    rgba(120,80,255,0.6);
+    rgba(88,101,242,.55);
 
 }
 
 
 .discord-button img {
 
-  width: 100%;
+  width:
+    100%;
 
-  height: 100%;
+  height:
+    100%;
 
-  object-fit: cover;
+  object-fit:
+    contain;
 
-}
-
-
-.discord-button:hover {
-
-  transform:
-    scale(1.1);
+  border-radius:
+    50%;
 
 }
 
 
 /* ==========================================================
-   MUSIC BUTTON
+   TOP-LEFT NOTIFICATION
    ========================================================== */
 
-.music-button {
+.toast {
 
-  position: fixed;
+  position:
+    fixed;
 
-  right: 105px;
+  top:
+    16px;
 
-  bottom: 25px;
+  left:
+    16px;
 
-  z-index: 9999;
+  z-index:
+    100;
 
-  width: 55px;
+  max-width:
+    min(
+      390px,
+      calc(100vw - 32px)
+    );
 
-  height: 55px;
+  padding:
+    13px 16px;
 
-  border-radius: 50%;
+  border-radius:
+    12px;
 
-  padding: 0;
+  color:
+    #fff;
 
-  margin: 0;
+  font-weight:
+    bold;
+
+  background:
+    rgba(12,8,32,.95);
+
+  border:
+    2px solid
+    #8d6cff;
+
+  box-shadow:
+    0 8px 30px
+    rgba(0,0,0,.45);
+
+  transform:
+    translateX(-130%);
+
+  opacity:
+    0;
+
+  transition:
+    .25s;
+
+  pointer-events:
+    none;
 
 }
 
 
-.small {
+.toast.show {
 
-  opacity: 0.7;
+  transform:
+    translateX(0);
 
-  font-size: 13px;
+  opacity:
+    1;
 
 }
 
 
-.empty {
+.toast.success {
 
-  text-align: center;
+  border-color:
+    #70ffb0;
 
-  opacity: 0.7;
+}
 
-  padding: 20px;
+
+.toast.error {
+
+  border-color:
+    #ff6b83;
+
+}
+
+
+/* ==========================================================
+   SPAM HONEYPOT
+   ========================================================== */
+
+.hidden-spam {
+
+  position:
+    absolute;
+
+  left:
+    -10000px;
+
+  opacity:
+    0;
+
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media (max-width: 700px) {
+
+  .split {
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+
+  .team-image {
+
+    width:
+      95px;
+
+    height:
+      75px;
+
+  }
+
+
+  .panel {
+
+    padding:
+      17px;
+
+  }
+
+
+  .character-grid {
+
+    grid-template-columns:
+      repeat(
+        2,
+        1fr
+      );
+
+  }
+
+
+  .team-contestants {
+
+    grid-template-columns:
+      repeat(
+        3,
+        1fr
+      );
+
+  }
 
 }
 
@@ -1665,136 +2474,137 @@ button:disabled {
 
 
 <!-- ========================================================
-     NOTIFICATION
+     STAR FIELD
      ======================================================== -->
 
-<div id="notification"></div>
+<div class="starfield"></div>
 
 
 <!-- ========================================================
-     AUDIO
+     HEADER
      ======================================================== -->
-
-<audio
-  id="music"
-  src="${MUSIC_URL}"
-  loop
-></audio>
-
-<audio
-  id="hoverSound"
-  src="${HOVER_SOUND}"
-></audio>
-
-<audio
-  id="clickSound"
-  src="${CLICK_SOUND}"
-></audio>
-
-<audio
-  id="voteFinishSound"
-  src="${VOTE_FINISH_SOUND}"
-></audio>
-
-<audio
-  id="recommendFinishSound"
-  src="${RECOMMEND_FINISH_SOUND}"
-></audio>
-
-
-<!-- ========================================================
-     DISCORD
-     ======================================================== -->
-
-<a
-  class="discord-button"
-  href="${DISCORD_URL}"
-  target="_blank"
-  rel="noopener noreferrer"
->
-
-  <img
-    src="${discord_logo}"
-    alt="Discord"
-  >
-
-</a>
-
-
-<button
-  id="musicButton"
-  class="music-button"
-  title="Toggle music"
->
-  🔊
-</button>
-
-
-<div class="container">
-
 
 <header>
 
   <h1>
-    Battle for a Hotel
+    ${escapeHTML(SHOW_CONFIG.showName)}
   </h1>
 
   <p>
-    BFAHVSC — Episode ${EPISODE} Voting
+    ${escapeHTML(SHOW_CONFIG.codename)}
+    •
+    ${escapeHTML(SHOW_CONFIG.episodeTitle)}
   </p>
 
 </header>
+
+
+<main>
+
+
+<!-- ========================================================
+     TEAMS
+     ======================================================== -->
+
+<section class="panel">
+
+  <h2>
+    Teams
+  </h2>
+
+  <div class="team-grid">
+
+    ${renderTeams()}
+
+  </div>
+
+</section>
 
 
 <!-- ========================================================
      VOTING
      ======================================================== -->
 
-<section class="panel">
+<section
+  class="panel"
+  id="vote-panel"
+>
 
   <h2>
-    🗳️ Vote
+    Vote to eliminate a character
   </h2>
 
-  <p class="small">
-    Select the contestant you want to vote for,
-    then enter your nickname and reason.
+  <p>
+
+    Current losing team:
+
+    <b>
+      ${escapeHTML(team.name)}
+    </b>
+
   </p>
 
-  <div id="teamsContainer"></div>
+
+  <form id="vote-form">
 
 
-  <form id="voteForm">
+    <div class="character-grid">
 
-    <label for="nickname">
-      Voter nickname
+      ${team.members
+        .map(
+          id =>
+            renderCharacterCard(id)
+        )
+        .join("")}
+
+    </div>
+
+
+    <label class="field">
+
+      <span>
+        Your nickname
+      </span>
+
+      <input
+        type="text"
+        name="nickname"
+        maxlength="30"
+        required
+      >
+
     </label>
+
+
+    <label class="field">
+
+      <span>
+        Why should they be eliminated?
+      </span>
+
+      <textarea
+        name="reason"
+        maxlength="500"
+        required
+      ></textarea>
+
+    </label>
+
 
     <input
-      id="nickname"
-      maxlength="40"
-      placeholder="Your nickname"
-      autocomplete="nickname"
+      class="hidden-spam"
+      name="website"
+      tabindex="-1"
+      autocomplete="off"
     >
-
-
-    <label for="reason">
-      Reason
-    </label>
-
-    <textarea
-      id="reason"
-      maxlength="500"
-      placeholder="Why are you voting for this contestant?"
-    ></textarea>
 
 
     <button
       type="submit"
-      id="voteButton"
     >
       Submit Vote
     </button>
+
 
   </form>
 
@@ -1808,1136 +2618,1046 @@ button:disabled {
 <section class="panel">
 
   <h2>
-    📊 Current Results
+    Current Results
   </h2>
 
+
   <div
-    id="resultsContainer"
-    class="results-grid"
-  ></div>
+    id="results-total"
+    class="results-total"
+  >
+
+    <b>
+      ${results.total}
+    </b>
+
+    vote(s)
+
+  </div>
+
+
+  <div id="results-list">
+
+    ${renderResultsHTML(results)}
+
+  </div>
 
 </section>
 
 
 <!-- ========================================================
-     UNUSED RECOMMENDED CHARACTERS
+     RECENT VOTES
      ======================================================== -->
 
 <section class="panel">
 
   <h2>
-    ⭐ Unused Recommended Characters
+    Recent Votes
   </h2>
 
-  <p>
-    Characters in this section have been recommended
-    but have <strong>not debuted yet</strong>.
-  </p>
 
-  <div
-    id="recommendedCharacters"
-    class="recommended-grid"
-  ></div>
+  <div id="recent-votes">
 
-  <p id="recommendedCount"></p>
+    ${renderRecentVotes(results.recent)}
+
+  </div>
 
 </section>
 
 
 <!-- ========================================================
-     RECOMMEND CHARACTER
+     RECOMMENDATIONS
      ======================================================== -->
 
 <section class="panel">
 
   <h2>
-    ➕ Recommend a Character
+    Recommend a character
   </h2>
 
+
   <p>
-    Recommend a character that could debut in a future
-    Battle for a Hotel voting.
+
+    Recommend a character for BFAHotel.
+    They do not have to be a current contestant.
+
   </p>
 
 
-  <form id="recommendForm">
+  <form id="recommend-form">
 
-    <label for="recommendName">
-      Character name
+
+    <label class="field">
+
+      <span>
+        Character name
+      </span>
+
+      <input
+        type="text"
+        name="characterName"
+        maxlength="60"
+        required
+      >
+
     </label>
+
+
+    <label class="field">
+
+      <span>
+        Your nickname
+      </span>
+
+      <input
+        type="text"
+        name="nickname"
+        maxlength="30"
+        required
+      >
+
+    </label>
+
+
+    <label class="field">
+
+      <span>
+        Why should they be recommended?
+      </span>
+
+      <textarea
+        name="reason"
+        maxlength="500"
+        required
+      ></textarea>
+
+    </label>
+
 
     <input
-      id="recommendName"
-      maxlength="80"
-      required
-      placeholder="Character name"
+      class="hidden-spam"
+      name="website"
+      tabindex="-1"
+      autocomplete="off"
     >
-
-
-    <label for="recommendNickname">
-      Your nickname
-    </label>
-
-    <input
-      id="recommendNickname"
-      maxlength="40"
-      placeholder="Your nickname"
-    >
-
-
-    <label for="recommendReason">
-      Why should they be recommended?
-    </label>
-
-    <textarea
-      id="recommendReason"
-      maxlength="500"
-      placeholder="Tell us about the character..."
-    ></textarea>
 
 
     <button
       type="submit"
-      id="recommendButton"
     >
       Recommend Character
     </button>
+
 
   </form>
 
 </section>
 
 
-</div>
+<!-- ========================================================
+     RECOMMENDATION RESULTS
+     ======================================================== -->
 
+<section class="panel">
+
+  <h2>
+    Recommended Characters
+  </h2>
+
+
+  <div class="split">
+
+
+    <div>
+
+      <h3>
+        Unused Recommended Characters
+      </h3>
+
+
+      <div id="unused-recommendations">
+
+        ${renderRecommendationList(
+          recommendations.unused,
+          "No unused recommendations yet."
+        )}
+
+      </div>
+
+    </div>
+
+
+    <div>
+
+      <h3>
+        Recommended Characters Who Have Debuted
+      </h3>
+
+
+      <div id="debuted-recommendations">
+
+        ${renderRecommendationList(
+          recommendations.debuted,
+          "No recommended characters have debuted yet."
+        )}
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+</main>
+
+
+<!-- ========================================================
+     FIXED BUTTONS
+     ======================================================== -->
+
+<button
+  class="music-button"
+  id="music-button"
+>
+  ♫ Music: Off
+</button>
+
+
+<a
+  class="discord-button"
+  href="${DISCORD_URL}"
+  target="_blank"
+  rel="noopener"
+  title="BFAH Discord"
+>
+
+  <img
+    src="${DISCORD_LOGO}"
+    alt="Discord"
+  >
+
+</a>
+
+
+<!-- ========================================================
+     TOAST
+     ======================================================== -->
+
+<div
+  class="toast"
+  id="toast"
+></div>
+
+
+<!-- ========================================================
+     AUDIO
+     ======================================================== -->
+
+<audio
+  id="music"
+  loop
+  preload="none"
+  src="${AUDIO.music}"
+></audio>
+
+
+<audio
+  id="hover-sound"
+  preload="none"
+  src="${AUDIO.hover}"
+></audio>
+
+
+<audio
+  id="click-sound"
+  preload="none"
+  src="${AUDIO.click}"
+></audio>
+
+
+<audio
+  id="vote-finish"
+  preload="none"
+  src="${AUDIO.voteFinish}"
+></audio>
+
+
+<audio
+  id="recommend-finish"
+  preload="none"
+  src="${AUDIO.recommendFinish}"
+></audio>
+
+
+<!-- ========================================================
+     JAVASCRIPT
+     ======================================================== -->
 
 <script>
 
-
-// ============================================================
-// ELEMENTS
-// ============================================================
-
-const teamsContainer =
-  document.getElementById(
-    "teamsContainer"
-  );
-
-const resultsContainer =
-  document.getElementById(
-    "resultsContainer"
-  );
-
-const recommendedCharacters =
-  document.getElementById(
-    "recommendedCharacters"
-  );
-
-const recommendedCount =
-  document.getElementById(
-    "recommendedCount"
-  );
-
-const voteForm =
-  document.getElementById(
-    "voteForm"
-  );
-
-const recommendForm =
-  document.getElementById(
-    "recommendForm"
-  );
-
-const notification =
-  document.getElementById(
-    "notification"
-  );
-
-const music =
-  document.getElementById(
-    "music"
-  );
-
-const hoverSound =
-  document.getElementById(
-    "hoverSound"
-  );
-
-const clickSound =
-  document.getElementById(
-    "clickSound"
-  );
-
-const voteFinishSound =
-  document.getElementById(
-    "voteFinishSound"
-  );
-
-const recommendFinishSound =
-  document.getElementById(
-    "recommendFinishSound"
-  );
-
-const musicButton =
-  document.getElementById(
-    "musicButton"
-  );
+const $ =
+  selector =>
+    document.querySelector(selector);
 
 
-// ============================================================
-// STATE
-// ============================================================
+// ==========================================================
+// SOUND
+// ==========================================================
 
-let config = null;
+function playSound(id) {
 
-let selectedContestant = null;
+  const audio =
+    document.getElementById(id);
 
-let notificationTimeout = null;
-
-let musicEnabled = false;
+  if (!audio) return;
 
 
-// ============================================================
-// SOUND HELPERS
-// ============================================================
+  audio.currentTime = 0;
 
-function playSound(audio) {
-
-  try {
-
-    audio.currentTime = 0;
-
-    audio.play().catch(() => {});
-
-  } catch (_) {}
+  audio
+    .play()
+    .catch(() => {});
 
 }
 
 
-function showNotification(message) {
+// ==========================================================
+// TOAST
+// ==========================================================
 
-  notification.textContent =
+function showToast(
+  message,
+  type = "success",
+  soundId = null
+) {
+
+  const toast =
+    $("#toast");
+
+
+  toast.textContent =
     message;
 
-  notification.classList.add(
-    "show"
-  );
+
+  toast.className =
+    "toast show " + type;
+
+
+  if (soundId) {
+
+    playSound(soundId);
+
+  }
+
 
   clearTimeout(
-    notificationTimeout
+    window.toastTimer
   );
 
-  notificationTimeout =
-    setTimeout(() => {
 
-      notification.classList.remove(
-        "show"
-      );
+  window.toastTimer =
+    setTimeout(
+      () =>
+        toast.classList.remove(
+          "show"
+        ),
 
-    }, 3000);
-
-}
-
-
-// ============================================================
-// MUSIC
-// ============================================================
-
-async function startMusic() {
-
-  try {
-
-    await music.play();
-
-    musicEnabled = true;
-
-    musicButton.textContent =
-      "🔊";
-
-  } catch (_) {
-
-    musicEnabled = false;
-
-    musicButton.textContent =
-      "🔇";
-
-  }
-
-}
-
-
-musicButton.addEventListener(
-  "click",
-  () => {
-
-    playSound(clickSound);
-
-    if (music.paused) {
-
-      startMusic();
-
-    } else {
-
-      music.pause();
-
-      musicEnabled = false;
-
-      musicButton.textContent =
-        "🔇";
-
-    }
-
-  }
-);
-
-
-// Start music after the user's
-// first interaction because browsers
-// can block autoplay.
-
-document.addEventListener(
-  "click",
-  () => {
-
-    if (!musicEnabled) {
-      startMusic();
-    }
-
-  },
-  {
-    once: true
-  }
-);
-
-
-// ============================================================
-// LOAD CONFIG
-// ============================================================
-
-async function loadConfig() {
-
-  const response =
-    await fetch("/config");
-
-  if (!response.ok) {
-
-    throw new Error(
-      "Could not load configuration."
+      4200
     );
 
-  }
-
-  config =
-    await response.json();
-
 }
 
 
-// ============================================================
-// RENDER TEAMS
-// ============================================================
+// ==========================================================
+// HOVER SOUND
+// ==========================================================
 
-function renderTeams() {
+document
+  .querySelectorAll(
+    "button,.character-card-inner,.contestant-icon,.discord-button"
+  )
+  .forEach(
+    element => {
 
-  teamsContainer.innerHTML = "";
-
-
-  for (
-    const [teamKey, team]
-    of Object.entries(config.teams)
-  ) {
-
-    const teamSection =
-      document.createElement(
-        "div"
-      );
-
-    teamSection.className =
-      "team";
-
-
-    const title =
-      document.createElement(
-        "div"
-      );
-
-    title.className =
-      "team-title";
-
-    title.textContent =
-      team.name;
-
-
-    teamSection.appendChild(
-      title
-    );
-
-
-    const members =
-      document.createElement(
-        "div"
-      );
-
-    members.className =
-      "team-members";
-
-
-    for (
-      const contestant
-      of team.members
-    ) {
-
-      const card =
-        document.createElement(
-          "div"
-        );
-
-      card.className =
-        "contestant";
-
-      card.dataset.id =
-        contestant.id;
-
-
-      const image =
-        document.createElement(
-          "img"
-        );
-
-      image.src =
-        contestant.image;
-
-      image.alt =
-        contestant.name;
-
-
-      const name =
-        document.createElement(
-          "div"
-        );
-
-      name.className =
-        "contestant-name";
-
-      name.textContent =
-        contestant.name;
-
-
-      const count =
-        document.createElement(
-          "div"
-        );
-
-      count.className =
-        "vote-count";
-
-      count.textContent =
-        "0 votes";
-
-      count.dataset.countFor =
-        contestant.id;
-
-
-      card.appendChild(
-        image
-      );
-
-      card.appendChild(
-        name
-      );
-
-      card.appendChild(
-        count
-      );
-
-
-      card.addEventListener(
+      element.addEventListener(
         "mouseenter",
-        () => {
-
+        () =>
           playSound(
-            hoverSound
-          );
-
-        }
-      );
-
-
-      card.addEventListener(
-        "click",
-        () => {
-
-          playSound(
-            clickSound
-          );
-
-          document
-            .querySelectorAll(
-              ".contestant.selected"
-            )
-            .forEach(
-              element =>
-                element.classList.remove(
-                  "selected"
-                )
-            );
-
-
-          card.classList.add(
-            "selected"
-          );
-
-
-          selectedContestant =
-            contestant.id;
-
-
-          showNotification(
-            "Selected: " +
-            contestant.name
-          );
-
-        }
-      );
-
-
-      members.appendChild(
-        card
+            "hover-sound"
+          )
       );
 
     }
+  );
 
 
-    teamSection.appendChild(
-      members
-    );
+// ==========================================================
+// CLICK SOUND
+// ==========================================================
 
-    teamsContainer.appendChild(
-      teamSection
-    );
+document
+  .querySelectorAll(
+    "button"
+  )
+  .forEach(
+    element => {
 
-  }
+      element.addEventListener(
+        "click",
+        () =>
+          playSound(
+            "click-sound"
+          )
+      );
 
-}
-
-
-// ============================================================
-// RENDER UNUSED RECOMMENDED CHARACTERS
-// ============================================================
-
-function renderRecommendedCharacters() {
-
-  const characters =
-    config.unusedRecommendedCharacters ||
-    [];
-
-
-  recommendedCharacters.innerHTML =
-    "";
+    }
+  );
 
 
-  recommendedCount.textContent =
-    characters.length +
-    " unused recommended character" +
-    (
-      characters.length === 1
-        ? ""
-        : "s"
-    );
+// ==========================================================
+// MUSIC
+// ==========================================================
+
+$("#music-button")
+  .addEventListener(
+    "click",
+
+    async () => {
+
+      const music =
+        $("#music");
+
+      const button =
+        $("#music-button");
+
+
+      if (music.paused) {
+
+        try {
+
+          await music.play();
+
+          button.textContent =
+            "♫ Music: On";
+
+        } catch {
+
+          showToast(
+            "Tap the music button again to allow music.",
+            "error"
+          );
+
+        }
+
+      } else {
+
+        music.pause();
+
+        button.textContent =
+          "♫ Music: Off";
+
+      }
+
+    }
+  );
+
+
+// ==========================================================
+// REFRESH RESULTS
+// ==========================================================
+
+async function refreshData() {
+
+  const [
+    resultsResponse,
+    recommendationsResponse
+  ] = await Promise.all([
+
+    fetch(
+      "/results",
+      {
+        cache:
+          "no-store"
+      }
+    ),
+
+    fetch(
+      "/recommendations",
+      {
+        cache:
+          "no-store"
+      }
+    )
+
+  ]);
 
 
   if (
-    characters.length === 0
+    !resultsResponse.ok ||
+    !recommendationsResponse.ok
   ) {
 
-    recommendedCharacters.innerHTML =
-      '<div class="empty">' +
-      'There are currently no unused recommended characters.' +
-      '</div>';
-
-    return;
-
-  }
-
-
-  for (
-    const character
-    of characters
-  ) {
-
-    const card =
-      document.createElement(
-        "div"
-      );
-
-    card.className =
-      "recommended-card";
-
-
-    if (character.image) {
-
-      const image =
-        document.createElement(
-          "img"
-        );
-
-      image.src =
-        character.image;
-
-      image.alt =
-        character.name;
-
-      card.appendChild(
-        image
-      );
-
-    }
-
-
-    const name =
-      document.createElement(
-        "strong"
-      );
-
-    name.textContent =
-      character.name;
-
-
-    card.appendChild(
-      name
-    );
-
-    recommendedCharacters.appendChild(
-      card
+    throw new Error(
+      "Could not refresh results."
     );
 
   }
+
+
+  const results =
+    await resultsResponse.json();
+
+
+  const recommendations =
+    await recommendationsResponse.json();
+
+
+  $("#results-total")
+    .innerHTML =
+      "<b>" +
+      results.total +
+      "</b> vote(s)";
+
+
+  $("#results-list")
+    .innerHTML =
+      results.html;
+
+
+  $("#recent-votes")
+    .innerHTML =
+      results.recentHtml;
+
+
+  $("#unused-recommendations")
+    .innerHTML =
+      recommendations.unusedHtml;
+
+
+  $("#debuted-recommendations")
+    .innerHTML =
+      recommendations.debutedHtml;
 
 }
 
 
-// ============================================================
-// LOAD RESULTS
-// ============================================================
+// ==========================================================
+// FORM SUBMISSION
+// ==========================================================
 
-async function loadResults() {
+async function submitForm(
+  form,
+  url,
+  finishSound,
+  successFallback
+) {
+
+  const button =
+    form.querySelector(
+      'button[type="submit"]'
+    );
+
+
+  button.disabled =
+    true;
+
+
+  const original =
+    button.textContent;
+
+
+  button.textContent =
+    "Submitting...";
+
 
   try {
 
     const response =
-      await fetch("/votes");
+      await fetch(
+        url,
+
+        {
+          method:
+            "POST",
+
+          body:
+            new FormData(form)
+        }
+      );
 
 
     const data =
-      await response.json();
+      await response
+        .json()
+        .catch(
+          () => ({
+            ok: false,
+
+            message:
+              "Server returned an invalid response."
+          })
+        );
 
 
-    if (!data.success) {
-      throw new Error(
-        data.error ||
-        "Could not load results."
-      );
-    }
-
-
-    renderResults(
-      data.results
-    );
-
-  } catch (error) {
-
-    resultsContainer.innerHTML =
-      '<div class="empty">' +
-      'Could not load voting results.' +
-      '</div>';
-
-  }
-
-}
-
-
-// ============================================================
-// RENDER RESULTS
-// ============================================================
-
-function renderResults(results) {
-
-  resultsContainer.innerHTML =
-    "";
-
-
-  for (
-    const teamKey
-    of Object.keys(results)
-  ) {
-
-    const team =
-      results[teamKey];
-
-
-    for (
-      const contestantId
-      of Object.keys(
-        team.contestants
-      )
+    if (
+      !response.ok ||
+      !data.ok
     ) {
 
-      const contestant =
-        team.contestants[
-          contestantId
-        ];
-
-
-      const card =
-        document.createElement(
-          "div"
-        );
-
-      card.className =
-        "result-card";
-
-
-      const name =
-        document.createElement(
-          "div"
-        );
-
-      name.className =
-        "result-name";
-
-      name.textContent =
-        contestant.name;
-
-
-      const votes =
-        document.createElement(
-          "div"
-        );
-
-      votes.textContent =
-        contestant.votes +
-        (
-          contestant.votes === 1
-            ? " vote"
-            : " votes"
-        );
-
-
-      const bar =
-        document.createElement(
-          "div"
-        );
-
-      bar.className =
-        "result-bar";
-
-
-      const fill =
-        document.createElement(
-          "div"
-        );
-
-      fill.className =
-        "result-fill";
-
-
-      const maxVotes =
-        Math.max(
-          ...Object.values(
-            team.contestants
-          ).map(
-            c => c.votes
-          ),
-          1
-        );
-
-
-      fill.style.width =
-        (
-          contestant.votes /
-          maxVotes *
-          100
-        ) + "%";
-
-
-      bar.appendChild(
-        fill
+      throw new Error(
+        data.message ||
+        "Submission failed."
       );
-
-
-      card.appendChild(
-        name
-      );
-
-      card.appendChild(
-        votes
-      );
-
-      card.appendChild(
-        bar
-      );
-
-
-      resultsContainer.appendChild(
-        card
-      );
-
-
-      const voteCount =
-        document.querySelector(
-          '[data-count-for="' +
-          contestant.id +
-          '"]'
-        );
-
-
-      if (voteCount) {
-
-        voteCount.textContent =
-          contestant.votes +
-          (
-            contestant.votes === 1
-              ? " vote"
-              : " votes"
-          );
-
-      }
-
-    }
-
-  }
-
-}
-
-
-// ============================================================
-// VOTE SUBMISSION
-// ============================================================
-
-voteForm.addEventListener(
-  "submit",
-  async event => {
-
-    event.preventDefault();
-
-
-    if (!selectedContestant) {
-
-      showNotification(
-        "Please select a contestant first!"
-      );
-
-      return;
 
     }
 
 
-    const nickname =
-      document
-        .getElementById(
-          "nickname"
-        )
-        .value
-        .trim();
+    form.reset();
 
 
-    const reason =
-      document
-        .getElementById(
-          "reason"
-        )
-        .value
-        .trim();
+    showToast(
+      data.message ||
+      successFallback,
 
+      "success",
 
-    const button =
-      document.getElementById(
-        "voteButton"
-      );
+      finishSound
+    );
 
 
-    button.disabled =
-      true;
+    await refreshData();
 
-    button.textContent =
-      "Submitting...";
-
-
-    try {
-
-      const response =
-        await fetch(
-          "/vote",
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body:
-              JSON.stringify({
-                nickname:
-                  nickname ||
-                  "Anonymous",
-
-                reason,
-
-                contestantId:
-                  selectedContestant
-              })
-          }
-        );
-
-
-      const data =
-        await response.json();
-
-
-      if (!data.success) {
-
-        throw new Error(
-          data.error ||
-          "Vote failed."
-        );
-
-      }
-
-
-      playSound(
-        voteFinishSound
-      );
-
-
-      showNotification(
-        "✓ Your vote was submitted!"
-      );
-
-
-      voteForm.reset();
-
-
-      document
-        .querySelectorAll(
-          ".contestant.selected"
-        )
-        .forEach(
-          element =>
-            element.classList.remove(
-              "selected"
-            )
-        );
-
-
-      selectedContestant =
-        null;
-
-
-      await loadResults();
-
-
-    } catch (error) {
-
-      showNotification(
-        "Vote failed: " +
-        error.message
-      );
-
-    } finally {
-
-      button.disabled =
-        false;
-
-      button.textContent =
-        "Submit Vote";
-
-    }
-
-  }
-);
-
-
-// ============================================================
-// RECOMMENDATION SUBMISSION
-// ============================================================
-
-recommendForm.addEventListener(
-  "submit",
-  async event => {
-
-    event.preventDefault();
-
-
-    const name =
-      document
-        .getElementById(
-          "recommendName"
-        )
-        .value
-        .trim();
-
-
-    const nickname =
-      document
-        .getElementById(
-          "recommendNickname"
-        )
-        .value
-        .trim();
-
-
-    const reason =
-      document
-        .getElementById(
-          "recommendReason"
-        )
-        .value
-        .trim();
-
-
-    const button =
-      document.getElementById(
-        "recommendButton"
-      );
-
-
-    if (!name) {
-
-      showNotification(
-        "Enter a character name first!"
-      );
-
-      return;
-
-    }
-
-
-    button.disabled =
-      true;
-
-    button.textContent =
-      "Submitting...";
-
-
-    try {
-
-      const response =
-        await fetch(
-          "/recommend",
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body:
-              JSON.stringify({
-                name,
-
-                nickname:
-                  nickname ||
-                  "Anonymous",
-
-                reason
-              })
-          }
-        );
-
-
-      const data =
-        await response.json();
-
-
-      if (!data.success) {
-
-        throw new Error(
-          data.error ||
-          "Recommendation failed."
-        );
-
-      }
-
-
-      playSound(
-        recommendFinishSound
-      );
-
-
-      showNotification(
-        "✓ Character recommendation submitted!"
-      );
-
-
-      recommendForm.reset();
-
-
-    } catch (error) {
-
-      showNotification(
-        "Recommendation failed: " +
-        error.message
-      );
-
-    } finally {
-
-      button.disabled =
-        false;
-
-      button.textContent =
-        "Recommend Character";
-
-    }
-
-  }
-);
-
-
-// ============================================================
-// INITIALIZE
-// ============================================================
-
-async function initialize() {
-
-  try {
-
-    await loadConfig();
-
-    renderTeams();
-
-    renderRecommendedCharacters();
-
-    await loadResults();
 
   } catch (error) {
 
-    showNotification(
-      "Could not load BFAHVSC."
+    showToast(
+      error.message ||
+      "Something went wrong.",
+
+      "error"
     );
 
-    console.error(error);
+
+  } finally {
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      original;
 
   }
 
 }
 
 
-initialize();
+// ==========================================================
+// VOTE FORM
+// ==========================================================
+
+$("#vote-form")
+  .addEventListener(
+    "submit",
+
+    event => {
+
+      event.preventDefault();
 
 
-// ============================================================
-// PERIODIC RESULT REFRESH
-// ============================================================
+      submitForm(
+        event.currentTarget,
 
-setInterval(
-  loadResults,
-  15000
-);
+        "/vote",
+
+        "vote-finish",
+
+        "Vote submitted!"
+      );
+
+    }
+  );
+
+
+// ==========================================================
+// RECOMMENDATION FORM
+// ==========================================================
+
+$("#recommend-form")
+  .addEventListener(
+    "submit",
+
+    event => {
+
+      event.preventDefault();
+
+
+      submitForm(
+        event.currentTarget,
+
+        "/recommend",
+
+        "recommend-finish",
+
+        "Recommendation submitted!"
+      );
+
+    }
+  );
 
 </script>
+
 
 </body>
 
 </html>`;
+
+}
+
+
+// ============================================================
+// STATUS API
+// ============================================================
+
+async function handleStatus(env) {
+
+  try {
+
+    const [
+      votes,
+      recommendations
+    ] = await Promise.all([
+
+      getFirebaseData(
+        env,
+        "votes"
+      ),
+
+      getFirebaseData(
+        env,
+        "recommendations"
+      )
+
+    ]);
+
+
+    return json({
+
+      ok: true,
+
+      episode:
+        SHOW_CONFIG.episode,
+
+      episodeTitle:
+        SHOW_CONFIG.episodeTitle,
+
+      voteCount:
+        buildResults(votes).total,
+
+      recommendationCount:
+        buildRecommendationResults(
+          recommendations
+        ).total
+
+    });
+
+
+  } catch (error) {
+
+    return json(
+      {
+        ok: false,
+        error: error.message
+      },
+      500
+    );
+
+  }
+
+}
+
+
+// ============================================================
+// RESULTS API
+// ============================================================
+
+async function handleResultsAPI(env) {
+
+  const votes =
+    await getFirebaseData(
+      env,
+      "votes"
+    );
+
+
+  const results =
+    buildResults(votes);
+
+
+  return json({
+
+    ok: true,
+
+    total:
+      results.total,
+
+    counts:
+      results.counts,
+
+    html:
+      renderResultsHTML(
+        results
+      ),
+
+    recentHtml:
+      renderRecentVotes(
+        results.recent
+      )
+
+  });
+
+}
+
+
+// ============================================================
+// RECOMMENDATIONS API
+// ============================================================
+
+async function handleRecommendationsAPI(
+  env
+) {
+
+  const recommendations =
+    await getFirebaseData(
+      env,
+      "recommendations"
+    );
+
+
+  const results =
+    buildRecommendationResults(
+      recommendations
+    );
+
+
+  return json({
+
+    ok: true,
+
+    total:
+      results.total,
+
+    unusedCount:
+      results.unused.length,
+
+    debutedCount:
+      results.debuted.length,
+
+    unusedHtml:
+      renderRecommendationList(
+        results.unused,
+        "No unused recommendations yet."
+      ),
+
+    debutedHtml:
+      renderRecommendationList(
+        results.debuted,
+        "No recommended characters have debuted yet."
+      )
+
+  });
+
+}
+
+
+// ============================================================
+// CLOUDFLARE WORKER
+// ============================================================
+
+export default {
+
+  async fetch(
+    request,
+    env
+  ) {
+
+    const url =
+      new URL(request.url);
+
+
+    const method =
+      request.method.toUpperCase();
+
+
+    try {
+
+
+      // ------------------------------------------------------
+      // MAIN PAGE
+      // ------------------------------------------------------
+
+      if (
+        method === "GET" &&
+        url.pathname === "/"
+      ) {
+
+        const [
+          votes,
+          recommendations
+        ] = await Promise.all([
+
+          getFirebaseData(
+            env,
+            "votes"
+          ),
+
+          getFirebaseData(
+            env,
+            "recommendations"
+          )
+
+        ]);
+
+
+        return new Response(
+
+          renderVotingPage(
+            buildResults(votes),
+
+            buildRecommendationResults(
+              recommendations
+            )
+          ),
+
+          {
+
+            headers: {
+
+              "content-type":
+                "text/html; charset=utf-8",
+
+              "cache-control":
+                "no-store"
+
+            }
+
+          }
+
+        );
+
+      }
+
+
+      // ------------------------------------------------------
+      // VOTE
+      // ------------------------------------------------------
+
+      if (
+        method === "POST" &&
+        url.pathname === "/vote"
+      ) {
+
+        return await handleVote(
+          request,
+          env
+        );
+
+      }
+
+
+      // ------------------------------------------------------
+      // RECOMMENDATION
+      // ------------------------------------------------------
+
+      if (
+        method === "POST" &&
+        url.pathname === "/recommend"
+      ) {
+
+        return await handleRecommendation(
+          request,
+          env
+        );
+
+      }
+
+
+      // ------------------------------------------------------
+      // RESULTS
+      // ------------------------------------------------------
+
+      if (
+        method === "GET" &&
+        url.pathname === "/results"
+      ) {
+
+        return await handleResultsAPI(
+          env
+        );
+
+      }
+
+
+      // ------------------------------------------------------
+      // RECOMMENDATIONS
+      // ------------------------------------------------------
+
+      if (
+        method === "GET" &&
+        url.pathname === "/recommendations"
+      ) {
+
+        return await handleRecommendationsAPI(
+          env
+        );
+
+      }
+
+
+      // ------------------------------------------------------
+      // STATUS
+      // ------------------------------------------------------
+
+      if (
+        method === "GET" &&
+        url.pathname === "/status"
+      ) {
+
+        return await handleStatus(
+          env
+        );
+
+      }
+
+
+      return new Response(
+        "Not Found",
+        {
+          status: 404
+        }
+      );
+
+
+    } catch (error) {
+
+      return json(
+
+        {
+          ok: false,
+
+          message:
+            error.message ||
+            "Something went wrong."
+        },
+
+        500
+
+      );
+
+    }
+
+  }
+
+};
