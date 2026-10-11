@@ -1187,33 +1187,13 @@ body {
   min-height: 100vh;
 
   background:
-
-    radial-gradient(
-      circle at 12% 18%,
-      rgba(90,50,255,.42),
-      transparent 28%
-    ),
-
-    radial-gradient(
-      circle at 88% 20%,
-      rgba(255,45,210,.28),
-      transparent 27%
-    ),
-
-    radial-gradient(
-      circle at 52% 88%,
-      rgba(0,150,255,.30),
-      transparent 35%
-    ),
-
-    linear-gradient(
-      135deg,
-      #01010a 0%,
-      #080021 45%,
-      #020817 100%
-    );
+    radial-gradient(ellipse at 74% 18%, rgba(100, 0, 0, .48), transparent 43%),
+    radial-gradient(ellipse at 18% 84%, rgba(111, 40, 14, .30), transparent 42%),
+    radial-gradient(ellipse at 52% 55%, rgba(45, 4, 4, .30), transparent 52%),
+    #050303;
 
   overflow-x: hidden;
+  position: relative;
 
 }
 
@@ -2515,9 +2495,49 @@ button:disabled {
 }
 
 .pronoun-cycle {
-  display: inline-block;
-  min-width: 2.1em;
-  text-align: center;
+  display: inline;
+  min-width: 0;
+  text-align: inherit;
+  transition: opacity .16s ease;
+}
+
+/* Screenshot-matched dark red space field and fine stars. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 7% 12%, rgba(255,255,255,.58) 50%, transparent 100%),
+    radial-gradient(1px 1px at 23% 38%, rgba(255,220,220,.45) 50%, transparent 100%),
+    radial-gradient(2px 2px at 61% 21%, rgba(255,255,255,.42) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 84% 69%, rgba(255,220,220,.45) 50%, transparent 100%),
+    radial-gradient(1px 1px at 42% 82%, rgba(255,255,255,.38) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 94% 31%, rgba(255,255,255,.5) 50%, transparent 100%);
+  background-size: 137px 113px, 181px 167px, 211px 193px, 163px 149px, 229px 197px, 193px 173px;
+  opacity: .75;
+}
+
+/* Keep the elimination prompt and its animated pronoun on one line. */
+#elimination-question {
+  display: inline !important;
+  white-space: normal;
+}
+#elimination-question #elimination-pronoun {
+  display: inline !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+  width: auto !important;
+  vertical-align: baseline;
+}
+#elimination-pronoun.pronoun-cycle {
+  display: inline !important;
+  min-width: 0 !important;
+  width: auto !important;
+  padding: 0;
+  margin: 0;
+  text-align: inherit;
   transition: opacity .16s ease;
 }
 
