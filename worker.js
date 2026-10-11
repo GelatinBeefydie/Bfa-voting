@@ -2344,6 +2344,87 @@ button:disabled {
 
 .wiimote-modal.open {
   display: flex;
+  animation: wiimote-backdrop-in .28s ease-out both;
+}
+
+@keyframes wiimote-backdrop-in {
+  from { opacity: 0; backdrop-filter: blur(0); }
+  to { opacity: 1; backdrop-filter: blur(8px); }
+}
+
+@keyframes wiimote-panel-in {
+  0% { opacity: 0; transform: translateY(28px) scale(.88) rotateX(7deg); }
+  70% { opacity: 1; transform: translateY(-4px) scale(1.015) rotateX(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0); }
+}
+
+@keyframes wiimote-card-in {
+  from { opacity: 0; transform: translateY(18px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes wiimote-render-float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+@keyframes wiimote-qr-glow {
+  0%, 100% { box-shadow: 0 0 0 rgba(190,170,255,0); }
+  50% { box-shadow: 0 0 22px rgba(190,170,255,.38); }
+}
+
+@keyframes wiimote-soul-float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: .8; }
+  50% { transform: translateY(-12px) scale(1.12); opacity: 1; }
+}
+
+.wiimote-modal-panel {
+  animation: wiimote-panel-in .48s cubic-bezier(.2,.8,.2,1) both;
+  transform-origin: center;
+}
+
+.wiimote-mii-card {
+  animation: wiimote-card-in .5s ease-out both;
+}
+.wiimote-mii-card:nth-child(2) {
+  animation-delay: .12s;
+}
+
+.wiimote-mii-card .mii-render {
+  animation: wiimote-render-float 3.2s ease-in-out infinite;
+  filter: drop-shadow(0 0 9px rgba(180,160,255,.28));
+}
+
+.wiimote-mii-card .mii-qr {
+  animation: wiimote-qr-glow 2.8s ease-in-out infinite;
+  border: 2px solid rgba(210,200,255,.35);
+  background: white;
+  padding: 7px;
+}
+
+.wiimote-soul {
+  position: absolute;
+  top: 17px;
+  left: 22px;
+  width: 25px;
+  height: 25px;
+  color: #ff526e;
+  font-size: 25px;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(255,65,100,.9));
+  pointer-events: none;
+  animation: wiimote-soul-float 1.65s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wiimote-modal.open,
+  .wiimote-modal-panel,
+  .wiimote-mii-card,
+  .wiimote-mii-card .mii-render,
+  .wiimote-mii-card .mii-qr,
+  .wiimote-soul {
+    animation: none !important;
+  }
 }
 
 .wiimote-modal-panel {
@@ -2431,6 +2512,13 @@ button:disabled {
   .wiimote-mii-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.pronoun-cycle {
+  display: inline-block;
+  min-width: 2.1em;
+  text-align: center;
+  transition: opacity .16s ease;
 }
 
 /* ==========================================================
@@ -2709,8 +2797,8 @@ button:disabled {
 
     <label class="field">
 
-      <span>
-        Why should they be eliminated?
+      <span id="elimination-question">
+        Why should <span id="elimination-pronoun">they</span> be eliminated?
       </span>
 
       <textarea
@@ -3000,6 +3088,7 @@ button:disabled {
   aria-labelledby="wiimote-modal-title"
 >
   <section class="wiimote-modal-panel">
+    <span class="wiimote-soul" aria-hidden="true">♥</span>
     <button
       class="wiimote-close"
       id="wiimote-close"
@@ -3017,14 +3106,14 @@ button:disabled {
       <article class="wiimote-mii-card">
         <h3>Mii Creator QR Code</h3>
         <p>For the Mii creator at <a class="wiimote-mii-link" href="https://mii.nxw.pw/" target="_blank" rel="noopener">mii.nxw.pw</a>.</p>
-        <img src="${IMAGE_BASE}WiimoteMiiCreator.png" alt="QR code for Wiimote's Mii in the Mii creator">
+        <img class="mii-qr" src="${IMAGE_BASE}WiimoteMiiCreator.png" alt="QR code for Wiimote's Mii in the Mii creator">
         <img class="mii-render" src="${IMAGE_BASE}wiimotemcrender.png" alt="Render of Wiimote's Mii from the Mii creator">
       </article>
 
       <article class="wiimote-mii-card">
         <h3>Console QR Code</h3>
         <p>For supported consoles: 3DS, Wii U, and Switch 2.</p>
-        <img src="${IMAGE_BASE}wiimotesw2.png" alt="QR code for Wiimote's Mii on consoles">
+        <img class="mii-qr" src="${IMAGE_BASE}wiimotesw2.png" alt="QR code for Wiimote's Mii on consoles">
         <img class="mii-render" src="${IMAGE_BASE}wiimotesw2render.png" alt="Render of Wiimote's Mii on consoles">
       </article>
     </div>
@@ -3091,6 +3180,75 @@ button:disabled {
 const $ =
   selector =>
     document.querySelector(selector);
+
+
+// ==========================================================
+// CHARACTER-SPECIFIC VOTING PRONOUNS
+// ==========================================================
+// Default character genders/pronouns supplied for BFAHotel.
+// Pink Fedora, Pink Slush Cup, Scarfy, and Crayon use she/her.
+// Red Slush Cup, Amiibo Red Slush Cup, and Mint Slush Cup
+// cycle only the pronoun word through they / he / she.
+
+const SHE_PRONOUN_CHARACTERS = new Set([
+  "pinkfedora",
+  "pinkslushcup",
+  "scarfy",
+  "crayon"
+]);
+
+const ANY_PRONOUN_CHARACTERS = new Set([
+  "redslushcup",
+  "amiiboredslushcup",
+  "mintslushcup"
+]);
+
+const ANY_PRONOUN_CYCLE = ["they", "he", "she"];
+let pronounCycleTimer = null;
+let pronounCycleIndex = 0;
+
+function updateEliminationQuestion() {
+  const selected = $('input[name="characterId"]:checked');
+  const pronoun = $("#elimination-pronoun");
+  if (!pronoun) return;
+
+  if (pronounCycleTimer !== null) {
+    clearInterval(pronounCycleTimer);
+    pronounCycleTimer = null;
+  }
+
+  pronoun.classList.remove("pronoun-cycle");
+  pronoun.style.opacity = "1";
+
+  if (!selected) {
+    pronoun.textContent = "they";
+    return;
+  }
+
+  const id = selected.value;
+  if (ANY_PRONOUN_CHARACTERS.has(id)) {
+    pronounCycleIndex = 0;
+    pronoun.textContent = ANY_PRONOUN_CYCLE[pronounCycleIndex];
+    pronoun.classList.add("pronoun-cycle");
+
+    pronounCycleTimer = setInterval(() => {
+      pronoun.style.opacity = "0";
+      window.setTimeout(() => {
+        pronounCycleIndex = (pronounCycleIndex + 1) % ANY_PRONOUN_CYCLE.length;
+        pronoun.textContent = ANY_PRONOUN_CYCLE[pronounCycleIndex];
+        pronoun.style.opacity = "1";
+      }, 160);
+    }, 1150);
+    return;
+  }
+
+  pronoun.textContent = SHE_PRONOUN_CHARACTERS.has(id) ? "she" : "he";
+}
+
+document.querySelectorAll('input[name="characterId"]').forEach(input => {
+  input.addEventListener("change", updateEliminationQuestion);
+});
+updateEliminationQuestion();
 
 
 // ==========================================================
