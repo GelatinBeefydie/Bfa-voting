@@ -93,7 +93,7 @@ const FONT_URL =
 const AUDIO = {
 
   music:
-    "https://www.dropbox.com/scl/fi/vxeppt603dn8puyjp5ewz/bfahquietautumn.wav?rlkey=0phw0tch3x8h4lmiazi0xx46p&st=c1friwll&raw=1",
+    "https://www.dropbox.com/scl/fi/e7m8muo5msn3t47voz75h/Mii-Creator-Space-Theme-Official-Music-Visualizer.mp3?rlkey=k7aoytkd42bvx7sahzc1waocd&st=35aeiopn&raw=1",
 
   recommendFinish:
     "https://www.dropbox.com/scl/fi/ydcvqygyrfeydlc80k1bc/pod_search_ping_01.wav?rlkey=z0n4ivn1uw618khmqh3jyudds&st=48othi0q&raw=1",
