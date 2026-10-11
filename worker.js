@@ -2302,6 +2302,137 @@ button:disabled {
 }
 
 
+
+/* ==========================================================
+   WIIMOTE MII POPUP
+   ========================================================== */
+
+.wiimote-button {
+  position: fixed;
+  right: 88px;
+  bottom: 18px;
+  z-index: 20;
+  width: 64px;
+  height: 64px;
+  padding: 3px;
+  border: 2px solid rgba(255,255,255,.75);
+  border-radius: 15px;
+  background: rgba(15,10,40,.92);
+  box-shadow: 0 0 20px rgba(130,100,255,.45);
+  display: grid;
+  place-items: center;
+}
+
+.wiimote-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.wiimote-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0,0,10,.82);
+  backdrop-filter: blur(8px);
+}
+
+.wiimote-modal.open {
+  display: flex;
+}
+
+.wiimote-modal-panel {
+  position: relative;
+  width: min(900px, 100%);
+  max-height: min(90vh, 900px);
+  overflow-y: auto;
+  padding: 24px;
+  border: 2px solid rgba(255,255,255,.65);
+  border-radius: 20px;
+  color: white;
+  background: linear-gradient(145deg, rgba(24,14,65,.98), rgba(7,10,34,.99));
+  box-shadow: 0 0 38px rgba(120,80,255,.4);
+}
+
+.wiimote-modal-panel h2 {
+  padding-right: 42px;
+  margin-bottom: 8px;
+}
+
+.wiimote-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  font-size: 1.4rem;
+}
+
+.wiimote-mii-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.wiimote-mii-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 14px;
+  background: rgba(255,255,255,.055);
+  text-align: center;
+}
+
+.wiimote-mii-card h3 {
+  margin-top: 0;
+}
+
+.wiimote-mii-card img {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  max-height: 320px;
+  object-fit: contain;
+  margin: 12px auto;
+  border-radius: 8px;
+}
+
+.wiimote-mii-card .mii-render {
+  max-height: 260px;
+}
+
+.wiimote-mii-card p {
+  color: #cbd0ee;
+  overflow-wrap: anywhere;
+}
+
+.wiimote-mii-link {
+  color: #c9baff;
+  font-weight: bold;
+}
+
+@media (max-width: 650px) {
+  .wiimote-button {
+    right: 88px;
+    bottom: 18px;
+    width: 58px;
+    height: 58px;
+  }
+  .wiimote-modal-panel {
+    padding: 18px;
+  }
+  .wiimote-mii-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ==========================================================
    TOP-LEFT NOTIFICATION
    ========================================================== */
@@ -2843,6 +2974,65 @@ button:disabled {
 
 
 <!-- ========================================================
+     WIIMOTE'S OFFICIAL MII POPUP
+     ======================================================== -->
+
+<button
+  class="wiimote-button"
+  id="wiimote-button"
+  type="button"
+  title="See Wiimote's official Mii from the episode"
+  aria-label="See Wiimote's official Mii from the episode"
+  aria-haspopup="dialog"
+  aria-controls="wiimote-modal"
+>
+  <img
+    src="${IMAGE_BASE}wiimote.gif"
+    alt="Wiimote's Mii"
+  >
+</button>
+
+<div
+  class="wiimote-modal"
+  id="wiimote-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="wiimote-modal-title"
+>
+  <section class="wiimote-modal-panel">
+    <button
+      class="wiimote-close"
+      id="wiimote-close"
+      type="button"
+      aria-label="Close Mii popup"
+      title="Close"
+    >×</button>
+
+    <h2 id="wiimote-modal-title">Wiimote's Official Mii</h2>
+    <p class="muted">
+      The host Wiimote's official Mii seen in the episode. Scan the QR code for the version that matches your device or Mii creator.
+    </p>
+
+    <div class="wiimote-mii-grid">
+      <article class="wiimote-mii-card">
+        <h3>Mii Creator QR Code</h3>
+        <p>For the Mii creator at <a class="wiimote-mii-link" href="https://mii.nxw.pw/" target="_blank" rel="noopener">mii.nxw.pw</a>.</p>
+        <img src="${IMAGE_BASE}WiimoteMiiCreator.png" alt="QR code for Wiimote's Mii in the Mii creator">
+        <img class="mii-render" src="${IMAGE_BASE}wiimotemcrender.png" alt="Render of Wiimote's Mii from the Mii creator">
+      </article>
+
+      <article class="wiimote-mii-card">
+        <h3>Console QR Code</h3>
+        <p>For supported consoles: 3DS, Wii U, and Switch 2.</p>
+        <img src="${IMAGE_BASE}wiimotesw2.png" alt="QR code for Wiimote's Mii on consoles">
+        <img class="mii-render" src="${IMAGE_BASE}wiimotesw2render.png" alt="Render of Wiimote's Mii on consoles">
+      </article>
+    </div>
+  </section>
+</div>
+
+
+<!-- ========================================================
      TOAST
      ======================================================== -->
 
@@ -2977,7 +3167,7 @@ function showToast(
 
 document
   .querySelectorAll(
-    "button,.character-card-inner,.contestant-icon,.discord-button"
+    "button,.character-card-inner,.contestant-icon,.discord-button,.wiimote-button"
   )
   .forEach(
     element => {
@@ -3063,6 +3253,38 @@ $("#music-button")
 
     }
   );
+
+
+// ==========================================================
+// WIIMOTE MII POPUP
+// ==========================================================
+
+const wiimoteModal = $("#wiimote-modal");
+
+function openWiimotePopup() {
+  wiimoteModal.classList.add("open");
+  $("#wiimote-close").focus();
+}
+
+function closeWiimotePopup() {
+  wiimoteModal.classList.remove("open");
+  $("#wiimote-button").focus();
+}
+
+$("#wiimote-button").addEventListener("click", openWiimotePopup);
+$("#wiimote-close").addEventListener("click", closeWiimotePopup);
+
+wiimoteModal.addEventListener("click", event => {
+  if (event.target === wiimoteModal) {
+    closeWiimotePopup();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && wiimoteModal.classList.contains("open")) {
+    closeWiimotePopup();
+  }
+});
 
 
 // ==========================================================
