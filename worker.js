@@ -1,6 +1,6 @@
 const SHOW_CONFIG = {
   showName: "Battle for a Hotel",
-  codename: "BFAHVSC",
+  codename: "BFAHVSC - Music Credits to Mii Creator",
 
   episode: 1,
   episodeTitle: "Episode 1",
